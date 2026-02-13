@@ -1,5 +1,6 @@
 # Guide for setting up a dev enviroment to become credit to team.
 
+## NOTE: This tutorial is far from done and need editing. Deal with it.
 Have you ever wondered what you could do to contribute to Castaway.tf?
 One thing you could do, is become familiar with the coding (more like scripting really, but who gives a fuck? Normies certainly don't) aspect of Castaway.tf
 
