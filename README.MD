@@ -1,6 +1,5 @@
 # Guide for setting up a dev enviroment to become credit to team.
 
-## NOTE: This tutorial is far from done and need editing. Deal with it.
 Have you ever wondered what you could do to contribute to Castaway.tf?
 One thing you could do, is become familiar with the coding (more like scripting really, but who gives a fuck? Normies certainly don't) aspect of Castaway.tf
 
@@ -14,8 +13,9 @@ for getting setup.
 * Setting up SSH key and testing connection to Github (Linux)
 * The basics of navigating in a terminal
 * Creating a repository (aka 'repo') in git.
-* Making a branch in git.
-* Comitting, pushing, merge in git.
+* Making a branch in git and using merge
+* Pushing a branch in git.
+* Rebasing a branch.
 * How to install the TF2 dedicated server.
 * How to install Metamod:Source and Sourcemod
 * How to fork the Castaway.tf repo
@@ -58,8 +58,8 @@ Note: The reason we want those two switches turned to the ON position is because
 You want to copy that e-mail and save it down somewhere. You will be using it when you configure git later, and it's also something you want to give out to the rest of us during development so you can be credit to team when you assist with stuff.
 
 Now you have a github account properly configured and ready.
-There's the case with setting from github's retarded DEI "main" to "master" as the default branch, but I personally never got it working.
-You can try fixing their gay shit by going to 'Repositories' under the section 'Code, planning, and automation' and changing it in the box at the top.
+One more thing: go to Settings>Repositories
+and change the default branch name from main to master then press the 'update' button, then wait for the tiny message and then press the 'update' button one more time. You want to see a message at the top that says 'New repositories you create will use 'master' as their default branch name. '. We do this to not feed the retarded DEI bullshit.
 
 ## How to install git
 
@@ -69,12 +69,14 @@ It was written by a very cool nerd from Finland (Perkele) called Linus Torvalds 
 It has proven invalueable to basement dwelling nerds for many years now, and it will be of use to you too.
 
 At this point, the tutorial will split up into Windows
-and Linux specific points, and they will merge and diverge as needed.
+and Linux specific points, and they will merge and diverge as needed as some commands and steps are for a specific OS, and others can be used on both.
 The tutorial assumes that people on Linux are more capable of less handholding as there's already plenty of tutorials and examples online.
-Windows users typically need a bit more handholding.
 
 ### Linux
-Git is almost always already installed with your choosen distro already, if it's not, you will need to go lookup the specific instructions on installing it for your choosen distro.
+Git is almost always already installed with your choosen distro already, if it's not, you can get it here:
+
+https://git-scm.com/install/linux
+Use the appropiate command for your distro.
 
 ### Windows
 
@@ -104,7 +106,7 @@ You should get a positive reply with the version of git.
 infected with the DEI mindvirus whenever Git 3.0 comes out in the future, run this command in a terminal:
 
 `git config --global init.defaultBranch master`
-This sets the default branchname to master, which is what proper people will have for their repositories. Only a faggot would willingly let insane trannies dictate to them what and how their tech is to be used (I'm not joking, that faggot who tried to implement the CoC (Code of Conduct) onto Linux and places like Github is a literal insane tranny.
+This sets the default branchname to master, which is what proper people will have for their repositories. Only a faggot would willingly let insane trannies dictate to them what and how their tech is to be used (I'm not joking, that faggot who tried to implement the CoC (Code of Conduct) onto Linux and places like Github is a literal insane tranny groomer).
 
 Being proper people, we will not allow that bullshit.
 
@@ -279,27 +281,30 @@ It's time to start learning how to use Git.
 
 5. make a folder named 'mytestrepo' and cd into it.
 
-Unless you are told otherwise, It's assumed you work in the same terminal always and that your current working directory is:
+Unless you are told to change otherwise, you current working directory should be:
 
-Windows:
+Windows: `C:\Users\YourUserName\castaway\repos\mytestrepo`
 Linux: `/home/yourusername/castaway/repos/mytestrepo`
 
 ### Initializing a git repo.
 
 While in the mytestrepo folder, run this command: `git init`.
 This will create a git repository inside of your folder.
+Fairly short chapter really.
+
+## Your first commit.
 
 Now follow along:
 
-Using your favorite text editor (Notepad is fine for these basic tasks), create
+Using your favorite text editor (Notepad is fine for these basic tasks on Windows, pick something appropiate on Linux), create
 a file named 'MyTestFile.txt'.
 
-Remember how I told you that normally you should avoid BIG LETTERS to make it easier for Linux? This is not a iron clad rule depending on the kind of programming that's being done, especially not for files. I did say to try to avoid it. In our specific example,
-we are essentially using CamelCase.
+Remember how I told you that normally you should avoid BIG LETTERS to make it easier for Linux? This is not a iron clad rule depending on the kind of programming that's being done, especially not for files. I did say to try to avoid it to avoid confusion. In our specific example,
+we are essentially using CamelCase for the filename.
 
 Enter the following into the text file:
 
-`Hello World`.
+`Hello World!`.
 
 Save the file as a normal .txt file.
 
@@ -390,5 +395,151 @@ With these things done, you are now ready to commit your staged changes:
 
 `git commit -m "Initial commit."`
 
-This will create a commit (a 'snapshot' if you want to use another name for it. But formally it's called a commit and it's what the tutorial will use) of the state of all the tracked files at that particular point in time. 
+This will create a commit (a 'snapshot' if you want to use another name for it. But formally it's called a commit and it's what the tutorial will use) of the state of all the tracked files at that particular point in time.
+
+### Logs everywhere!
+You can see a log of all the commits
+on the current branch you are on
+with `git log`.
+
+A couple of usefull variants on git log:
+
+`git log -x` Replace x with how many commits back you want to look.
+`git log --oneline` Makes the log nicer to look at. One commit per line.
+
+`git log --oneline -x` Same idea as 
+the other with -x, allows you to look back x number of commits.
+
+`git log --since="2026-02-01" --until="2026-02-10"` Allows you to see commits made between two dates.
+
+`git log --oneline --since="2026-02-01" --until="2026-02-10" -10` Same, but with the nice oneline stuff.
+
+More ways to use logging can be found in the git book:
+https://git-scm.com/book/en/v2
+
+## Making a branch in git and using merge
+One of the most primary ways you will be working with git, is with branches.
+
+So to begin with: 'master' is also technically a branch, it's just the first branch that we plan to use as the primary branch of the repo.
+
+If you imagine a endless tree, then master would be the main trunk, the branches are offshoots that are based on the trunk at that particular point (commit) in time, and then these branches come back into the trunk later on when they are ready to be merged, becoming part of the trunk.
+
+### So what is a branch?
+A branch is a diverging point usually based on another branch for the purposes of developing one or more features without disturbing the branch it was based on.
+
+This allows people to co-operate on developing the software without interrupting eachother. When things go well, this can lead to a situation where there are no so called 'conflicts', allowing branches to seamlessly be merged into master. And if a conflict DOES appear, git provides tools and solutions to resolving these conflicts.
+
+Creating a new branch based on master (or based on any branch really) is done by using the `git checkout` command. This command normally checks out a certain branch (which typically will be the latest commit that branch has), but by passing a flag to the command, we will instead create a new branch (check git status first and ensure you are on master:
+
+`git checkout -b mytestbranch`
+This creates a new branch called 'mytestbranch', based on whatever branch you are currently on.
+
+At the same time, it also checks out this new branch for you, which means you have now switches branch from master to mytestbranch
+
+Type git status and you should now see this:
+
+```
+git status
+On branch mytestbranch
+nothing to commit, working tree clean
+```
+
+As you can see, we are now on the mytestbranch. 
+
+At the moment, this branch is on the same commit as the last one you had on master. If you run the command `git log --oneline` you will see the following:
+
+```
+git log --oneline
+2c3b723 (HEAD -> mytestbranch, master) Initial commit.
+```
+
+The HEAD -> shows you what branch you are currently on, and any other branches that has the same commit is also shown. Here we see master.
+
+Let's try making a new commit on this branch to see how it changes.
+
+Open your MyTestFile.txt file and add this line:
+'And welcome to'
+
+Save the file, and like you learned before in 'My first commit', make a commit. When you make commits,
+they should be short and descriptive of what changes the commits do.
+For this example tutorial, I suggest a message like
+'Added a new line of text to file MyTestFile.txt'.
+
+Note:
+If you are working with several files in the same commit (more than 2), you could do something like 'Added new lines of text to .txt files in folder X.'
+and urge people to look at what files are touched by the commit. 
+
+After having committed the file, do the following:
+
+```
+git log --oneline
+0ad6152 (HEAD -> mytestbranch) Added a new line of text to file MyTestFile.txt
+30dc0c6 (master) Initial commit.
+git checkout master
+Switched to branch 'master'
+git log --oneline
+30dc0c6 (HEAD -> master) Initial commit.
+```
+
+As you can see, our branch mytestbranch has now moved ahead of master (as in the commit on mytestbranch is newer than the commit on master).
+
+### Merging a branch in git
+
+Now, considering that master is our primary branch, how exactly do we get the changes that we made in the mytestbranch into master?
+
+We merge it in.
+
+First, we need to check out master:
+
+`git checkout master`
+
+(Before we continue on, now take a look at the MyTestFile.txt, you should see the text 'And welcome to' disappear, this is because we checked out master, which is on a older commit).
+
+Now, while you are on master, type this:
+
+`git merge mytestbranch`
+
+This will result in the following:
+
+```
+git merge mytestbranch
+Updating 30dc0c6..0ad6152
+Fast-forward
+ MyTestFile.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+```
+
+(Note: You may not see the exact numbers here as I was messing with the file, that's fine).
+
+We have now merged the changes from mytestbranch into master.
+
+“Merge? But it says Fast-forward?”
+
+This can look confusing at first. Since master had not changed since we started working on mytestbranch, there was nothing to combine.
+Git simply moved the master branch forward to the same commit as mytestbranch.
+This is called a fast-forward merge.
+
+When master has changed, Git creates a new commit to join the two branches.
+
+In some cases, a merge may result in a conflict that Git cannot solve automatically.
+We will go through that later in the tutorial.
+
+Now, if you look again in notepad, you will see that the line has re-appeared.
+
+Also let's check the logs:
+
+```
+git log --oneline
+0ad6152 (HEAD -> master, mytestbranch) Added a new line of text to file MyTestFile.txt
+30dc0c6 Initial commit.
+```
+Now master is on the same commit as mytestbranch.
+
+When you work on the Castaway.tf repo, you will NEVER be using merge yourself since random owns the repo. Instead you will be using 
+
+## Creating a repo on Github and pushing to it.
+
+For Linux Users: Make sure you followed all the steps in the 'Setting up SSH key and testing connection to Github (Linux)'
+chapter before continuing.
+
 
