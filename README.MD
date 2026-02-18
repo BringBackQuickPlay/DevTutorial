@@ -14,8 +14,8 @@ for getting setup.
 * The basics of navigating in a terminal
 * Creating a repository (aka 'repo') in git.
 * Making a branch in git and using merge
-* Pushing a branch in git.
-* 
+* Creating a repo on Github and pushing to it.
+* Fetching, merging from, or pulling from your remote.
 * Rebasing a branch.
 * How to install the TF2 dedicated server.
 * How to install Metamod:Source and Sourcemod
@@ -684,7 +684,7 @@ You can simply run:
 
 Git will then automatically push your local 'master' branch to the remote 'master' branch on GitHub.
 
-### Fetching, merging from, or pulling from your remote
+## Fetching, merging from, or pulling from your remote
 
 Git is not only about pushing. You also need to fetch changes from the remote repository (often to update 'master') and then merge them (or pull, if you are confident), so you can work with the latest state of the repository.
 
@@ -787,5 +787,14 @@ This merges the already-fetched changes from the remote into your local 'master'
 
 You should only use git pull when it is your own repository that you fully control, or when you explicitly do not care about inspecting changes first. This is because git pull performs a fetch behind the scenes and then immediately applies the result. In addition to being ambiguous when multiple remotes are involved, it can also fetch and apply new commits that you did not inspect or plan for.
 
+## Rebasing a branch
 
+Finally we come to the command you will be using the most when working with the Castaway.tf
+repo. 
+
+It can take a while for random to accept the changes you make in a PR ('Pull Request', more on that later). During that time, what can (and often will happen since we are several people who work on the repo) is that Castaway.tf's 'master' repo will move ahead of the branch involved in your pull request.
+
+To that end, random will likely comment on your pull request with "this needs a rebase"
+or something similar. By rebasing, you replay all commits
+that you have ontop of the latest 
 
