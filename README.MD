@@ -655,55 +655,67 @@ To https://github.com/yourgithubusername/mytestrepo.git
 ```
 You might see slightly different numbers here, it does not matter too much (especially when it comes to the hashes).
 
-You have now successfully pushed to your repo on github.
-Go to it on github and you should now see your 'MyTestFile.txt'
-appearing. The branch will be 'master'.
+You have now successfully pushed to your repository on GitHub.
+Go to it on GitHub and you should now see your 'MyTestFile.txt' appearing.
+The branch on GitHub will be 'master'.
 
-Let me explain what the push command did:
+Let me briefly explain what the push command did, since this will matter when we later fetch and merge changes.
 
--u tells git "We want to remember that the upstream of this local 'master' branch is origin/master".
+The -u switch tells Git:
+'Remember that the upstream for this local 'master' branch is the branch named 'master' on the remote called 'origin'.'
 
-origin is the label (remember how we created it when we did 'git remote add'?).
+'origin' is the remote label (remember how we created it earlier using 'git remote add').
 
-And then 'master' is the branch we wanted to push.
-Git will connect to github, see that the master branch does not exist yet on the remote,
-and will create the remote as 'origin/master' to make it distinct from
-your local 'master'.
+And 'master' is the local branch we wanted to push.
 
-Because we used the -u switch, we no longer need to specify 'master'
-anymore in future pushes to the master branch. You can just 
-type 'git push' without any further arguments while the master branch is checked out and it 
-will simply know to push to your 'origin/master' on your github repo.
+When you run the push command for the first time, Git connects to GitHub and creates a real branch named 'master' on the remote repository, because it does not exist there yet.
 
-## Fetching, merging from or pulling from your remote.
+At the same time, Git also creates or updates a local remote-tracking branch called 'origin/master'.
+This branch exists only in your local repository and represents Git’s last known snapshot of the remote 'master' branch.
 
-Git is not only about pushing, you also need to fetch changes from the remote (often to update master) and merge (or pull if you are confident) so you can work with the latest things on the repo.
+The local 'master' branch is your working branch.
+The local 'origin/master' branch is read-only and is only updated when you run 'git fetch' or 'git pull'.
 
-One of the ideas with git is that you don't have to constantly update just to continue working on your feature, however sometimes it's simply neccesary to do so.
+Because we used the -u switch, Git now knows that your local 'master' branch is associated with the remote 'master' branch on 'origin'. This means that in the future, while the 'master' branch is checked out, you no longer need to specify the branch name explicitly.
 
-For example, if a functions name and/or parameters are changed in master and you want
-to ensure you don't have to hear "please rebase on master" from the original repo owner
-the first thing you do when you create your pr.
+You can simply run:
 
-To that end, let's learn about it.
-We will need something new to fetch, so we will 
-modify MyTestFile.txt on github instead to make some changes happen.
+'git push'
 
-Click on it on your github repo in the web browser.
-Then click the tiny pen icon (It's near the 'Raw' button).
+Git will then automatically push your local 'master' branch to the remote 'master' branch on GitHub.
 
-This opens the online text editor of github.
-Now add this new line of text:
+### Fetching, merging from, or pulling from your remote
+
+Git is not only about pushing. You also need to fetch changes from the remote repository (often to update 'master') and then merge them (or pull, if you are confident), so you can work with the latest state of the repository.
+
+One of the ideas behind Git is that you do not have to constantly update just to continue working on your own feature. However, sometimes it is simply necessary to do so.
+
+For example, if a function’s name and/or parameters are changed in 'master' and you want to avoid hearing 'please rebase on master' from the original repository owner, the first thing you should do is make sure you are up to date before creating your pull request.
+
+To that end, let’s walk through how fetching and updating works in practice.
+
+We will need something new to fetch, so we will modify 'MyTestFile.txt' directly on GitHub to make some changes happen.
+
+Click on 'MyTestFile.txt' in your GitHub repository in the web browser.
+Then click the small pen icon (it is near the 'Raw' button).
+
+This opens GitHub’s online text editor.
+
+Now add the following new line of text:
+
 'the Dominatening!'.
 
 Then click the green button that says 'Commit changes...'.
 
-Keep the Commit message as-is.
-In the description, just type "Added a new line.".
+Keep the commit message as-is.
+In the description field, type 'Added a new line.'.
 Then press the green 'Commit changes' button.
 
-Now in the terminal, type these two commands:
-`git fetch` and `git status`.
+Now go back to your terminal and run the following two commands:
+
+'git fetch'
+and then
+'git status'.
 
 You will see the following:
 
@@ -726,42 +738,54 @@ PS C:\Users\GotMitUns\Documents\testrepo>
 ```
 
 git fetch does the following:
-It looks at what you have set as upstream for the current branch you are on 
-which you can check with `git remote -v`.
 
-Then it fetched the changes and commits (but crucially, is not applying them to your local master).
+It contacts the remote repository and updates your local remote-tracking branches (for example, 'origin/master') with any new commits found there.
+Crucially, it does not apply those changes to your local working branch (such as 'master').
 
-IF you have several remotes (which I will go trough later for the Castaway.tf repo if you prefer doing more work from the terminal and only using Github for the PR's (Pull Requests) later), you will want to do the git fetch
-with `git fetch origin` to ensure you are fetching from origin instead,
-as git won't understand what you want to fetch from if you have more than one remote.
+Which remote is fetched depends on your configuration. In the common case where you have only one remote and an upstream set, git fetch will fetch from that remote automatically. You can check which remotes are configured with:
 
-As you can see, git says that your current local branch (master) is behind 
-origin/master by 1 commit.
+'git remote -v'
 
-Before you do what it suggests, you may wish to inspect the changes first.
-You can do so with this:
+If you have several remotes (which I will go through later for the Castaway.tf repository, especially if you prefer doing more work from the terminal and only using GitHub for PRs later), it is often better to be explicit and run:
 
-`git diff master..origin/master`
+'git fetch origin'
 
-This will show you the differences between your local master and origin/master.
-just be carefull when using this command. In a branch like master, you could get alot of console output, potentionally thousands of lines.
+This ensures you are fetching from 'origin' specifically, rather than fetching from all remotes or relying on implicit defaults.
 
-To make it more manageable, we will just get the essentials first.
+After fetching, Git may tell you that your local branch is behind the remote-tracking branch. For example, it may say that your local 'master' is behind 'origin/master' by one commit. This means new commits exist on the remote, but they have not been applied locally yet.
 
-`git diff --stat master..origin/master`
+Before doing what Git suggests, you may want to inspect the changes first.
 
-Will just show you the files that the newer origin/master
-changes compared to your local master.
+You can do so with:
 
-For even less spam incase hundreds of files are touched, you can
-just use this for the filenames only:
+'git diff master..origin/master'
 
-`git diff --name-only master..origin/master`.
+This shows the differences between your local 'master' branch and 'origin/master'.
+Be careful when using this command directly: on a branch like 'master', this can produce a lot of console output — potentially thousands of lines in large projects.
 
-If you want to check what has changed in the specific file you can use this:
+To make this more manageable, start with a summary view:
 
-`git diff master..origin/master -- path/to/filename`
+'git diff --stat master..origin/master'
 
+This shows only which files changed and roughly how large those changes are.
+
+If even that is too noisy because many files were touched, you can reduce it further to just filenames:
+
+'git diff --name-only master..origin/master'
+
+If you want to inspect a specific file in detail, you can do so like this:
+
+'git diff master..origin/master -- path/to/filename'
+
+You can obtain the correct paths from the output of the --name-only command shown above.
+
+If everything looks good and you are satisfied with the changes, you can merge them into your local branch with:
+
+'git merge origin/master'
+
+This merges the already-fetched changes from the remote into your local 'master'.
+
+You should only use git pull when it is your own repository that you fully control, or when you explicitly do not care about inspecting changes first. This is because git pull performs a fetch behind the scenes and then immediately applies the result. In addition to being ambiguous when multiple remotes are involved, it can also fetch and apply new commits that you did not inspect or plan for.
 
 
 
