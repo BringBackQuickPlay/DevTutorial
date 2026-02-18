@@ -15,6 +15,7 @@ for getting setup.
 * Creating a repository (aka 'repo') in git.
 * Making a branch in git and using merge
 * Pushing a branch in git.
+* 
 * Rebasing a branch.
 * How to install the TF2 dedicated server.
 * How to install Metamod:Source and Sourcemod
@@ -523,7 +524,7 @@ When master has changed, Git creates a new commit to join the two branches.
 In some cases, a merge may result in a conflict that Git cannot solve automatically.
 We will go through that later in the tutorial.
 
-Now, if you look again in notepad, you will see that the line has re-appeared.
+Now, if you look again in notepad, you will see that the line 'And welcome to' has re-appeared while you have the 'master' branch checked out.
 
 Also let's check the logs:
 
@@ -532,9 +533,9 @@ git log --oneline
 0ad6152 (HEAD -> master, mytestbranch) Added a new line of text to file MyTestFile.txt
 30dc0c6 Initial commit.
 ```
-Now master is on the same commit as mytestbranch.
+Now master is on the same commit as the one you made in the 'mytestbranch'.
 
-When you work on the Castaway.tf repo, you will NEVER be using merge yourself since random owns the repo. Instead you will be using 
+When you work on the Castaway.tf repo, you will NEVER be using merge yourself since random owns the repo. Only random may merge code into master. You should NEVER do it unless you are updating your local 'master' in the Castaway.tf fork you made. More on how to work with the Castaway.tf repo later.
 
 ## Creating a repo on Github and pushing to it.
 
@@ -592,47 +593,48 @@ If you do, good job.
 
 ### Preparing for push.
 
-Now with the remotes added, we can prepare for pushing.
-For linux users, you should already be setup for pushing, but if you came back to this tutorial later and have closed the terminal/logged out of your user, go back to Step 5, 6 and 7
-of the 'Setting up SSH key and testing connection to Github (Linux)' chapter
-and ensure your terminal is setup with a ssh agent and that you have added your key to the agent.
+Now that the remotes have been added, we can prepare for pushing.
+
+For Linux users, you should already be set up for pushing, but if you came back to this tutorial later and have closed the terminal or logged out of your user, go back to Step 5, 6, and 7
+of the 'Setting up SSH key and testing connection to GitHub (Linux)' chapter
+and ensure your terminal is set up with an SSH agent and that you have added your key to the agent.
 
 First, make sure you have the 'master' branch checked out.
-Then, run the command 'git status'.
+Then run the command 'git status'.
 
 You want it to read the following:
 
-```
 git status
 On branch master
 nothing to commit, working tree clean
-```
 
 When you are on the correct branch you want to push, have nothing to commit, and the working tree is clean, only then should you push.
 
-Enter this command (and windows users, you will now go trough your part of setting up authenthication, for linux users, move on to 'After the push').
-
-### Authentication on Windows.
-For windows users, a black tiny window will pop-up after running the command.
+Enter this command (and Windows users, you will now go through your part of setting up authentication when you run the push command; for Linux users, move on to 'After the push').
 
 `git push -u origin master`
 
-Now for you windows users, you will see a credentials manager pop up.
-I recommend using 'Sign in with your browser', it will open the webbrowser that your windows have set as standard.
+### Authentication on Windows
+
+Now for you Windows users, you will see a credentials manager pop up.
+I recommend using 'Sign in with your browser'; it will open the web browser that Windows has set as standard.
 
 Follow these steps:
 
-1. Click the 'Sign in with your browser'.
-3. In the webbrowser/tab that pops up, you might be prompted for your github name (or email)
-and github password if you are not already logged into the github account on that browser, enter the details and press 'login'.
-2. You will see a page that says 'Authorize Git Credential Manager'.
-3. Change nothing, just click 'Authorize git-ecosystem'.
+1. Click 'Sign in with your browser'.
+2. In the browser tab that pops up, you might be prompted for your GitHub username (or email)
+   and GitHub password if you are not already logged into your GitHub account in that browser.
+   Enter the details and press 'Log in'.
+3. You will see a page that says 'Authorize Git Credential Manager'.
+4. Change nothing; just click 'Authorize git-ecosystem'.
 5. When it says 'Authentication Succeeded', you can do what it says and close the tab.
 
-You are now done with authentication for this computer/windows account.
-If your  local (or Windows) computer account or computer itself is compromised for any reason or you reinstall windows or whatever, you can revoke the authentication for that device by goint to 'Settings'
-of your github account, go down to 'Applications' in the 'Integrations' section, then go to
-'Authorized OAuth Apps', there you can revoke the access for 'Git Credential Manager'.
+You are now done with authentication for this computer/Windows account.
+
+If your local (or Windows) computer account, or the computer itself, is compromised for any reason,
+or if you reinstall Windows or similar, you can revoke the authentication for that device by going to
+'Settings' in your GitHub account. From there, go down to 'Applications' in the 'Integrations' section,
+then to 'Authorized OAuth Apps'. There you can revoke access for 'Git Credential Manager'.
 
 ### After the push
 
@@ -665,7 +667,7 @@ origin is the label (remember how we created it when we did 'git remote add'?).
 
 And then 'master' is the branch we wanted to push.
 Git will connect to github, see that the master branch does not exist yet on the remote,
-and will create the remote on as 'origin/master' to make it distinct from
+and will create the remote as 'origin/master' to make it distinct from
 your local 'master'.
 
 Because we used the -u switch, we no longer need to specify 'master'
@@ -673,6 +675,92 @@ anymore in future pushes to the master branch. You can just
 type 'git push' without any further arguments while the master branch is checked out and it 
 will simply know to push to your 'origin/master' on your github repo.
 
+## Fetching, merging from or pulling from your remote.
+
+Git is not only about pushing, you also need to fetch changes from the remote (often to update master) and merge (or pull if you are confident) so you can work with the latest things on the repo.
+
+One of the ideas with git is that you don't have to constantly update just to continue working on your feature, however sometimes it's simply neccesary to do so.
+
+For example, if a functions name and/or parameters are changed in master and you want
+to ensure you don't have to hear "please rebase on master" from the original repo owner
+the first thing you do when you create your pr.
+
+To that end, let's learn about it.
+We will need something new to fetch, so we will 
+modify MyTestFile.txt on github instead to make some changes happen.
+
+Click on it on your github repo in the web browser.
+Then click the tiny pen icon (It's near the 'Raw' button).
+
+This opens the online text editor of github.
+Now add this new line of text:
+'the Dominatening!'.
+
+Then click the green button that says 'Commit changes...'.
+
+Keep the Commit message as-is.
+In the description, just type "Added a new line.".
+Then press the green 'Commit changes' button.
+
+Now in the terminal, type these two commands:
+`git fetch` and `git status`.
+
+You will see the following:
+
+```
+git fetch
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+Unpacking objects: 100% (3/3), 1008 bytes | 50.00 KiB/s, done.
+From https://github.com/ỳourgithubusername/mytestrepo
+   0e29fb4..43f7d1b  master     -> origin/master
+git status
+On branch master
+Your branch is behind 'origin/master' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+
+nothing to commit, working tree clean
+PS C:\Users\GotMitUns\Documents\testrepo>
+```
+
+git fetch does the following:
+It looks at what you have set as upstream for the current branch you are on 
+which you can check with `git remote -v`.
+
+Then it fetched the changes and commits (but crucially, is not applying them to your local master).
+
+IF you have several remotes (which I will go trough later for the Castaway.tf repo if you prefer doing more work from the terminal and only using Github for the PR's (Pull Requests) later), you will want to do the git fetch
+with `git fetch origin` to ensure you are fetching from origin instead,
+as git won't understand what you want to fetch from if you have more than one remote.
+
+As you can see, git says that your current local branch (master) is behind 
+origin/master by 1 commit.
+
+Before you do what it suggests, you may wish to inspect the changes first.
+You can do so with this:
+
+`git diff master..origin/master`
+
+This will show you the differences between your local master and origin/master.
+just be carefull when using this command. In a branch like master, you could get alot of console output, potentionally thousands of lines.
+
+To make it more manageable, we will just get the essentials first.
+
+`git diff --stat master..origin/master`
+
+Will just show you the files that the newer origin/master
+changes compared to your local master.
+
+For even less spam incase hundreds of files are touched, you can
+just use this for the filenames only:
+
+`git diff --name-only master..origin/master`.
+
+If you want to check what has changed in the specific file you can use this:
+
+`git diff master..origin/master -- path/to/filename`
 
 
 
