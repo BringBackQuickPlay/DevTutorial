@@ -150,10 +150,9 @@ What it does is that it will launch a ssh-agent to handle your ssh keys for this
 6. Now run this command: `ssh-add ~/.ssh/yourcodekeyname`.
 What that does is add the ssh key you have created. Do not add the .pub file of the same name! That file is what you give to the services you want to authenticate yourself against.
 
-7. You will be asked for the passphrase you used (if you set one). This only needs to be entered once per terminal window/session you run step 5 and 6 in. There are ways to make it less painful, but I won't go trough it in this tutorial.
+7. You will be asked for the passphrase you used (if you set one). This only needs to be entered once per terminal window/session you run step 5 and 6 in. There are ways to make it less painful, but I won't go trough it in this tutorial. Depending on how seriously you want to take your security, it's just a good idea overall to NOT make the ssh agent enable on all terminals automatically once per user login. But you do you.
 
-8. Go to the .ssh folder of your user, find the keyname.pub you created, open it with your preffered editor. Copy all the text inside of it. Make damn well sure you are not copying from the keyname file, it MUST be the one file that ends in .pub
-!!!
+8. Go to the .ssh folder of your user, find the keyname.pub you created, open it with your preffered editor. Copy all the text inside of it. Make damn well sure you are not copying from the keyname file, it MUST be the one file that ends in .pub !!!
 The one without .pub is the private part of your key and must not be shared with ANYONE! Giving anyone else that file or its contents would be like going to the darkest streetcorner and handing over the keys to your house while wearing a "Dunce" cap.
 
 9. If you are not still in Settings on github, click your profile avatar to the top right, then Settings, then go to 'SSH and GPG keys'.
@@ -541,5 +540,140 @@ When you work on the Castaway.tf repo, you will NEVER be using merge yourself si
 
 For Linux Users: Make sure you followed all the steps in the 'Setting up SSH key and testing connection to Github (Linux)'
 chapter before continuing.
+
+We need a server to "push" to.
+In our case (and since you will be using Castaway.tf's Github repo later on), it will be a repo on Github. That's why we spent time early on preparing for it.
+
+The idea is that you have a local repo where you code, and a remote repo that we push the local commits and branches to for storage and so others can see it, review it, clone the repo or whatever.
+
+When you work on your own project (or fork), it's so called "online" is often called "origin". When you push and fetch/pull from the original project that you forked from, we call that "upstream"
+
+To use the example of Castaway.tf:
+
+randoms repo is the upstream
+your clone of it that you have on your github account is origin.
+
+To begin with, you need to add some 'remotes' to push and fetch from.
+
+Click on your avatar in the top-right
+and then click 'Repositories'.
+Then click the green 'New' button.
+
+* In 'Repository name', fill in 'mytestrepo'.
+* In Description, fill in whatever you want or leave it empty.
+
+Make NO other changes to the configuration (this includes making sure Add README is set to off, we do not want to generate a README.MD for this tutorial so we ensure we have a clean repo).
+
+Click 'Create repository'.
+Wait a second or two, then
+look in the box that says
+'…or push an existing repository from the command line'.
+
+In that box, copy the first command (DO NOT COPY AND PASTE ALL COMMANDS AT ONCE, GITHUB IS RETARDED) only.
+
+In your local git repo, ensure you have 'master' checked out (remember? `git status` to check what branch you are on. You can also use git branch and check which one has a * on it, but it's better to check with git status to ensure working directory is clean),
+then paste in the 'git remote add ...'
+command you got from the box.
+
+After that, type in this command:
+
+`git remote -v`
+
+This will show you the remotes added to this local repo. You should see this if you did this correctly:
+
+```
+origin	URL_HERE (fetch)
+origin	URL_HERE (push)
+```
+And the 'URL_HERE's replaced with the URL
+you saw in the box on github after creating the repo
+
+If you do, good job.
+
+### Preparing for push.
+
+Now with the remotes added, we can prepare for pushing.
+For linux users, you should already be setup for pushing, but if you came back to this tutorial later and have closed the terminal/logged out of your user, go back to Step 5, 6 and 7
+of the 'Setting up SSH key and testing connection to Github (Linux)' chapter
+and ensure your terminal is setup with a ssh agent and that you have added your key to the agent.
+
+First, make sure you have the 'master' branch checked out.
+Then, run the command 'git status'.
+
+You want it to read the following:
+
+```
+git status
+On branch master
+nothing to commit, working tree clean
+```
+
+When you are on the correct branch you want to push, have nothing to commit, and the working tree is clean, only then should you push.
+
+Enter this command (and windows users, you will now go trough your part of setting up authenthication, for linux users, move on to 'After the push').
+
+### Authentication on Windows.
+For windows users, a black tiny window will pop-up after running the command.
+
+`git push -u origin master`
+
+Now for you windows users, you will see a credentials manager pop up.
+I recommend using 'Sign in with your browser', it will open the webbrowser that your windows have set as standard.
+
+Follow these steps:
+
+1. Click the 'Sign in with your browser'.
+3. In the webbrowser/tab that pops up, you might be prompted for your github name (or email)
+and github password if you are not already logged into the github account on that browser, enter the details and press 'login'.
+2. You will see a page that says 'Authorize Git Credential Manager'.
+3. Change nothing, just click 'Authorize git-ecosystem'.
+5. When it says 'Authentication Succeeded', you can do what it says and close the tab.
+
+You are now done with authentication for this computer/windows account.
+If your  local (or Windows) computer account or computer itself is compromised for any reason or you reinstall windows or whatever, you can revoke the authentication for that device by goint to 'Settings'
+of your github account, go down to 'Applications' in the 'Integrations' section, then go to
+'Authorized OAuth Apps', there you can revoke the access for 'Git Credential Manager'.
+
+### After the push
+
+You should now see the following:
+
+```
+git push
+info: please complete authentication in your browser...
+git: 'credential-manager-core' is not a git command. See 'git --help'.
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 6 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 331 bytes | 331.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
+To https://github.com/yourgithubusername/mytestrepo.git
+   74edd4d..f56df87  master -> master
+```
+You might see slightly different numbers here, it does not matter too much (especially when it comes to the hashes).
+
+You have now successfully pushed to your repo on github.
+Go to it on github and you should now see your 'MyTestFile.txt'
+appearing. The branch will be 'master'.
+
+Let me explain what the push command did:
+
+-u tells git "We want to remember that the upstream of this local 'master' branch is origin/master".
+
+origin is the label (remember how we created it when we did 'git remote add'?).
+
+And then 'master' is the branch we wanted to push.
+Git will connect to github, see that the master branch does not exist yet on the remote,
+and will create the remote on as 'origin/master' to make it distinct from
+your local 'master'.
+
+Because we used the -u switch, we no longer need to specify 'master'
+anymore in future pushes to the master branch. You can just 
+type 'git push' without any further arguments while the master branch is checked out and it 
+will simply know to push to your 'origin/master' on your github repo.
+
+
+
 
 
