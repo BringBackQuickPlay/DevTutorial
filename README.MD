@@ -789,20 +789,128 @@ You should only use git pull when it is your own repository that you fully contr
 
 ## Rebasing a branch
 
-Finally we come to the command you will be using the most when working with the Castaway.tf
-repo. 
+Finally, we come to one of the most important commands you will use when working with the Castaway.tf repo: **rebase**.
 
-It can take a while for random to accept the changes you make in a PR ('Pull Request', more on that later). During that time, what can (and often will happen since we are several people who work on the repo) is that Castaway.tf's 'master' repo will move ahead of the branch involved in your pull request.
+It can sometimes take a while for *random* to review and accept a pull request (PR). While you are waiting, other people are still working on the repo. That means the **master** branch can (and often will) move forward while your branch stays where it is.
 
-To that end, random will likely comment on your pull request with "this needs a rebase"
-or something similar. By rebasing, you replay all commits
-that you have ontop of the latest master commit, ensuring the history is kept clean.
+This is normal — and it is exactly why rebasing exists.
 
-When you work in git, it's likely that you will be making a bunch of trash commits
-before you finally arrive at the final solution you want.
+---
 
-But making a PR with a bunch of trash commits can look ugly, and distract from the most important parts when doing a review. You want any commits made after that to be a result of fixes or suggestions
-to come from code reviews from the others who work on the repo (more eyeballs = more bugs caught).
+### What does it mean that “master moved ahead”?
+
+Let’s say you create a branch called:
+
+`revert/hurtfallsound`
+
+
+This branch is based on **master** at a specific commit. To keep things simple, let’s call that commit **M100**. M will be master's commits and B will be the commits on your branch.
+
+You start working and make some commits on your branch:
+
+`B101, B102, B103, B104, B105`
+
+Your branch now looks like this:
+
+`M100 ─ B101 ─ B102 ─ B103 ─ B104 ─ B105`
+
+While you are working, other people continue committing to **master**. Master now has two new commits:
+`M101, M102`
+
+So master looks like this:
+`M100 ─ M101 ─ M102`
+
+Your branch is now **behind** master.
+
+---
+
+### What happens if you don’t rebase?
+
+If you open a pull request without rebasing, your branch is still based on **M100**.
+
+Git now sees two different histories that split at the same point:
+
+```
+master: M100 ─ M101 ─ M102
+your branch: M100 ─ B101 ─ B102 ─ B103 ─ B104 ─ B105
+```
+
+At this point, merging becomes messier than it needs to be. This often leads to:
+
+- confusing history
+- unnecessary merge commits
+- extra work for the maintainer (aka random)
+
+This is why you will often see comments like:
+
+> “This branch needs a rebase.”
+
+---
+
+### What rebasing actually does
+
+When you **rebase** your branch onto the latest master, Git does something very simple conceptually:
+
+> It takes *your commits* and replays them **on top of the newest master commit**.
+
+After rebasing, the history becomes:
+`M100 ─ M101 ─ M102 ─ B101 ─ B102 ─ B103 ─ B104 ─ B105`
+
+Ideally, when you use interactive rebase in order to squash commits etc, it would look like this:
+
+`M100 ─ M101 ─ M102 ─ B105`
+
+Where B105 was the final commit you tested yourself to the point where you feel it's ready for a pull request (or if you already made the pull request while master was still only on
+M100 and then it moved on to M102).
+
+Nothing from master is lost. Your work is simply moved so it now comes **after** the latest master commits.
+
+This makes the pull request clean and easy to merge.
+
+---
+
+### Why this matters in practice
+
+Castaway.tf is worked on by multiple people at the same time. Rebasing ensures that:
+
+- your work is based on the **latest** code
+- no one else’s changes are accidentally overridden
+- the project history stays readable and linear
+
+Because of this, it is a good habit to:
+
+> **Always check if you need to rebase before opening a pull request.**
+
+You can do this by:
+- looking at the commit history of `master` on GitHub
+- checking whether new commits were added after the commit your branch was created from
+
+---
+
+### Rebasing and “trash commits”
+
+When working on a feature, it is completely normal to make a lot of temporary or messy commits while figuring things out.
+
+However, a pull request full of “trash commits” can make reviews harder and distract from what actually changed.
+
+This is where **interactive rebase** comes in.
+
+Before opening a PR, you can:
+- squash commits
+- reorder them
+- fix commit messages
+
+The goal is not to hide mistakes — it is to present your work in a way that is easy to review.
+
+Ideally:
+- your commits show meaningful steps
+- any follow-up commits are responses to review feedback
+
+More eyes on the code means more bugs caught — and a cleaner history helps everyone.
+
+
+
+
 
 To that end, we will run a script in order to help prepare a branch for you
 for a silly (but real) scenario.
