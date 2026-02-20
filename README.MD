@@ -308,11 +308,15 @@ Enter the following into the text file:
 
 Save the file as a normal .txt file.
 
+As we go along in this tutorial, OS agnostic commands such as git
+commands will be noted as COMMAND: instead of the typical 
+windows path or user@domain printout you might see in a terminal
+when it's ready to accept a command from you.
+
 Now in your terminal, type `git status`.
-You will see the following (the pre-amble you typically see in a terminal has been removed leaving only the command since it's OS agnostic)
 
 ```
-git status
+COMMAND: git status
 On branch master
 
 No commits yet
@@ -351,8 +355,8 @@ Do so. run the command `git add MyTestFile.txt`.
 This will result in the following:
 
 ```
-git add MyTestFile.txt
-git status
+COMMAND: git add MyTestFile.txt
+COMMAND: git status
 On branch master
 
 No commits yet
@@ -439,7 +443,7 @@ At the same time, it also checks out this new branch for you, which means you ha
 Type git status and you should now see this:
 
 ```
-git status
+COMMAND: git status
 On branch mytestbranch
 nothing to commit, working tree clean
 ```
@@ -449,7 +453,7 @@ As you can see, we are now on the mytestbranch.
 At the moment, this branch is on the same commit as the last one you had on master. If you run the command `git log --oneline` you will see the following:
 
 ```
-git log --oneline
+COMMAND: git log --oneline
 2c3b723 (HEAD -> mytestbranch, master) Initial commit.
 ```
 
@@ -472,12 +476,12 @@ and urge people to look at what files are touched by the commit.
 After having committed the file, do the following:
 
 ```
-git log --oneline
+COMMAND: git log --oneline
 0ad6152 (HEAD -> mytestbranch) Added a new line of text to file MyTestFile.txt
 30dc0c6 (master) Initial commit.
-git checkout master
+COMMAND: git checkout master
 Switched to branch 'master'
-git log --oneline
+COMMAND: git log --oneline
 30dc0c6 (HEAD -> master) Initial commit.
 ```
 
@@ -502,7 +506,7 @@ Now, while you are on master, type this:
 This will result in the following:
 
 ```
-git merge mytestbranch
+COMMAND: git merge mytestbranch
 Updating 30dc0c6..0ad6152
 Fast-forward
  MyTestFile.txt | 3 ++-
@@ -529,7 +533,7 @@ Now, if you look again in notepad, you will see that the line 'And welcome to' h
 Also let's check the logs:
 
 ```
-git log --oneline
+COMMAND: git log --oneline
 0ad6152 (HEAD -> master, mytestbranch) Added a new line of text to file MyTestFile.txt
 30dc0c6 Initial commit.
 ```
@@ -641,7 +645,7 @@ then to 'Authorized OAuth Apps'. There you can revoke access for 'Git Credential
 You should now see the following:
 
 ```
-git push
+COMMAND: git push
 info: please complete authentication in your browser...
 git: 'credential-manager-core' is not a git command. See 'git --help'.
 Enumerating objects: 5, done.
@@ -653,6 +657,8 @@ Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
 To https://github.com/yourgithubusername/mytestrepo.git
    74edd4d..f56df87  master -> master
 ```
+
+(Small note: that `git: 'credential-manager-core' is not a git command. See 'git --help'` seems to be a small error/config error with my install, it might not show up for you)
 You might see slightly different numbers here, it does not matter too much (especially when it comes to the hashes).
 
 You have now successfully pushed to your repository on GitHub.
@@ -720,7 +726,7 @@ and then
 You will see the following:
 
 ```
-git fetch
+COMMAND: git fetch
 remote: Enumerating objects: 5, done.
 remote: Counting objects: 100% (5/5), done.
 remote: Compressing objects: 100% (3/3), done.
@@ -728,7 +734,7 @@ remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
 Unpacking objects: 100% (3/3), 1008 bytes | 50.00 KiB/s, done.
 From https://github.com/ỳourgithubusername/mytestrepo
    0e29fb4..43f7d1b  master     -> origin/master
-git status
+COMMAND: git status
 On branch master
 Your branch is behind 'origin/master' by 1 commit, and can be fast-forwarded.
   (use "git pull" to update your local branch)
@@ -909,9 +915,6 @@ Ideally:
 More eyes on the code means more bugs caught — and a cleaner history helps everyone.
 
 
-
-
-
 To that end, we will run a script in order to help prepare a branch for you
 for a silly (but real) scenario.
 
@@ -929,8 +932,9 @@ the Dominatening!
 If it does not, if it contains a empty line before and after etc, then while on the master branch, use notepad/nano or whatever text editor you have and ensure the .txt file contains
 exactly the text, then save the file and make a commit on the master branch so it's prepared properly.
 
+2. Create a new branch based on master named 'rebasetest'.
 
-2. Pick the correct script according to your OS.
+3. Pick the correct script according to your OS.
 
 
 Linux:
@@ -1118,13 +1122,11 @@ Commit-Step "Added a new line to MyTestFile.txt"
 Write-Host "Script is done!"
 ```
 
-3. Place the script outside of your repo folder. For example in github-repos folder.
-name the file "prep_rebase.EXT"
-and replace EXT in the filename with either .sh extension for Linux, or .ps1 for Windows.
-
+4. In your favorite text editor, paste in the script.
 If you are using Notepad to create the script on Windows. Ensure filetype
 is set to "All Files" and ensure the filename is prep_rebase.ps1
 before you save it, otherwise it does not become a script, but just a normal .txt file.
+On Linux, the script should be named prep_rebase.sh
 
 4. After that, open a new terminal at the location of the script
 and run it like this (do not run any commands on your repo in the other terminal while the script is running,
@@ -1140,7 +1142,9 @@ Windows:
 
 The script is not meant and must not be run twice, and must be run with a fresh rebasetest branch. 
 
-After a couple of seconds, the script should be done.
+After a couple of seconds, the script should be done
+adding a bunch of trash commits to the branch 'rebasetest'
+
 In your repo, you should be able to use the `git log --oneline --decorate`
 command and see the new trash commits, then the final commit that has a sensible 
 commit message.
@@ -1168,7 +1172,318 @@ And welcome to
 the Dominatening!
 ```
 
-3. Save the file, then commit it with a sensible message like 'Added a comment to the top of MyTestFile.txt'.
+3. Save the file, then commit it to master with a sensible message like 'Added a comment to the top of MyTestFile.txt'.
 
 ### Bringing it all together and doing the rebase.
 
+Now we have a prepared usecase for learning how to rebase.
+
+```
+COMMAND: git status
+On branch master
+Your branch is ahead of 'origin/master' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+COMMAND: git log --oneline --decorate
+f12ee06 (HEAD -> master) Added a comment to the top of MyTestFile.txt
+1c0d0cf (origin/master, origin/HEAD) Update MyTestFile.txt
+ae21d86 (mytestbranch) Added a new line of text to file MyTestFile.txt
+467c134 Initial commit.
+COMMAND: git checkout rebasetest
+Switched to branch 'rebasetest'
+COMMAND: git log --oneline --decorate
+fe49074 (HEAD -> rebasetest) Added a new line to MyTestFile.txt
+2e31eff words vs numbers? idk
+574e6ca case tweak maybe?
+4a8fa2c typo fix? fuck why is it not working
+3525a80 initial commit on branch rebasetest
+1c0d0cf (origin/master, origin/HEAD) Update MyTestFile.txt
+ae21d86 (mytestbranch) Added a new line of text to file MyTestFile.txt
+467c134 Initial commit.
+```
+
+As we want it to be for this tutorial, the master branch is now 1 commit "ahead" of the commit in the master branch you based the 'rebasetest' branch on.
+
+In a case like this, we want to rebase our rebasetest branch on master, especially
+if asked to do so, or before you make the PR.
+
+As (and will be real for you to in real situations) we have a bunch of trash commits that we likely don't want to keep around, we are going to run rebase in interactive mode to 
+be able to "squash" the commits.
+
+Run this command in your repo while you have rebasetest branch checked out:
+
+`git rebase -i master`
+
+You will see this:
+
+```
+pick 3525a80 # initial commit on branch rebasetest
+pick 4a8fa2c # typo fix? fuck why is it not working
+pick 574e6ca # case tweak maybe?
+pick 2e31eff # words vs numbers? idk
+pick fe49074 # Added a new line to MyTestFile.txt
+
+# Rebase f12ee06..fe49074 onto f12ee06 (5 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+#         create a merge commit using the original merge commit's
+#         message (or the oneline, if no original merge commit was
+#         specified); use -c <commit> to reword the commit message
+# u, update-ref <ref> = track a placeholder for the <ref> to be updated
+#                       to this position in the new commits. The <ref> is
+#                       updated at the end of the rebase
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+```
+
+Obviously the hashes will not all be the same.
+If on Windows and you picked Notepad as your git editor, git will not continue until 
+you save the weird git-rebase-todo file and then close it's tab. It's very important that you do not try to Save As or anything fancy, just Ctrl+S when done.
+
+On Linux, you will likely have a terminal based editor such as nano or something
+as your git editor, in which case git only continues when you
+save and then exit the editor.
+
+The examples illustrated will be Windows with Notepad.
+
+We want the first commit you made to this branch to be the pick
+and the rest squash, so you end up with this:
+
+```
+pick 3525a80 # initial commit on branch rebasetest
+squash 4a8fa2c # typo fix? fuck why is it not working
+squash 574e6ca # case tweak maybe?
+squash 2e31eff # words vs numbers? idk
+squash fe49074 # Added a new line to MyTestFile.txt
+
+# Rebase f12ee06..fe49074 onto f12ee06 (5 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+#         create a merge commit using the original merge commit's
+#         message (or the oneline, if no original merge commit was
+#         specified); use -c <commit> to reword the commit message
+# u, update-ref <ref> = track a placeholder for the <ref> to be updated
+#                       to this position in the new commits. The <ref> is
+#                       updated at the end of the rebase
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+```
+
+Then Ctrl+S and then close the tab.
+Merely a second after (on huge git repos it can take longer)
+your editor will again open a new file, this time called 
+COMMIT_EDITMSG.
+
+You will see something like this:
+
+```
+# This is a combination of 5 commits.
+# This is the 1st commit message:
+
+initial commit on branch rebasetest
+
+# This is the commit message #2:
+
+typo fix? fuck why is it not working
+
+# This is the commit message #3:
+
+case tweak maybe?
+
+# This is the commit message #4:
+
+words vs numbers? idk
+
+# This is the commit message #5:
+
+Added a new line to MyTestFile.txt
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Fri Feb 20 21:12:03 2026 +0100
+#
+# interactive rebase in progress; onto f12ee06
+# Last commands done (5 commands done):
+#    squash 2e31eff # words vs numbers? idk
+#    squash fe49074 # Added a new line to MyTestFile.txt
+# No commands remaining.
+# You are currently rebasing branch 'rebasetest' on 'f12ee06'.
+#
+# Changes to be committed:
+#	modified:   MyTestFile.txt
+#
+```
+
+Since it was the final commit we were interested in, we
+are going to delete everything so we end up with this:
+
+```
+Added a new line to MyTestFile.txt
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Fri Feb 20 21:12:03 2026 +0100
+#
+# interactive rebase in progress; onto f12ee06
+# Last commands done (5 commands done):
+#    squash 2e31eff # words vs numbers? idk
+#    squash fe49074 # Added a new line to MyTestFile.txt
+# No commands remaining.
+# You are currently rebasing branch 'rebasetest' on 'f12ee06'.
+#
+# Changes to be committed:
+#	modified:   MyTestFile.txt
+#
+```
+
+Then Ctrl+S and close the tab.
+
+This should be the result in the terminal after you are done (It will be different in Linux):
+
+```
+COMMAND: git rebase -i master
+hint: Waiting for your editor to close the file... unix2dos: converting file C:/Users/YourUserName/Documents/github-repos/mytestrepo/.git/rebase-merge/git-rebase-todo to DOS format...
+dos2unix: converting file C:/Users/CastawayDevTest/Documents/github-repos/mytestrepo/.git/rebase-merge/git-rebase-todo to Unix format...
+hint: Waiting for your editor to close the file... unix2dos: converting file C:/Users/YourUserName/Documents/github-repos/mytestrepo/.git/COMMIT_EDITMSG to DOS format...
+dos2unix: converting file C:/Users/CastawayDevTest/Documents/github-repos/mytestrepo/.git/COMMIT_EDITMSG to Unix format...
+[detached HEAD af91db9] Added a new line to MyTestFile.txt
+ Date: Fri Feb 20 21:12:03 2026 +0100
+ 1 file changed, 2 insertions(+)
+Successfully rebased and updated refs/heads/rebasetest.
+```
+
+This should be the result now if you look at the logs of your rebasetest branch:
+
+```
+COMMAND: git log --oneline --decorate
+af91db9 (HEAD -> rebasetest) Added a new line to MyTestFile.txt
+f12ee06 (master) Added a comment to the top of MyTestFile.txt
+1c0d0cf (origin/master, origin/HEAD) Update MyTestFile.txt
+ae21d86 (mytestbranch) Added a new line of text to file MyTestFile.txt
+467c134 Initial commit.
+```
+
+Notice now how the final commit of our rebasetest branch is above that 1 commit that was ahead in master? This is how you keep a clean history.
+
+Now you are ready to merge this into master like you did before:
+Check out master, then do `git merge rebasetest`
+
+Then do git status.
+
+You should now see 
+
+```
+COMMAND: git status
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+```
+
+The reason why it says that you are ahead of master by 2 commits is because
+you never pushed the "Added a comment to the top of MyTestFile.txt" commit you made
+to master that put it 1 commit ahead of rebasetest.
+
+Go ahead and run the command `git push` to push your updated master
+to your github repo.
+
+The text in the textfile both on the github repo's master and your local master should be:
+
+```
+# Demo file for rebase tutorial
+Hello World!
+And welcome to
+the Dominatening!
+
+Match begins in 10 seconds!
+```
+
+With this, you are done with git for now.
+If you'd like to read more about git before
+we return to git when we start working with the Castaway.tf repo to continue experimenting
+on your own, I recommend this book:
+
+https://git-scm.com/book/en/v2
+
+## How to install the TF2 dedicated server.
+
+For this part, I will be linking the wiki tutorials
+
+For Windows, you can simply follow this tutorial:
+https://wiki.teamfortress.com/wiki/Windows_dedicated_server
+
+For linux, follow this tutorial:
+https://wiki.teamfortress.com/wiki/Linux_dedicated_server
+
+I have some specific comments for linux:
+For a basic dev server that you intend to run on your own computer only, you can ignore (if you wish) the following steps from the linux tutorial:
+
+* Adding user
+* motd.txt
+* mapcycle.txt
+* pure_server_whitelist.txt
+
+In the launch script it suggests, set sv_pure to 0 instead of 1,
+and add +tv_enable 1 
+so you are ready to record with source tv. Source tv will be used to
+record demos for you from the perspective of the server, this helps you verify
+that other players will see what you intend them to see, let's say if you attach a particle to a player. 
+Remove the sv_setsteamaccount thing. That's something you only use if you intend to run a real tf2 server for others.
+
+You can also skip opening the ports and the Utilities and Persistence section.
+You might need to use noclip and teleports and a bunch of stuff
+while you develop for Castaway.tf, thus it might be prudent to add +sv_cheats 1
+to your launch script.
+
+Return to this tutorial when you have successfully installed the TF2 dedicated server and launched it once. Also try joining it. It will be on 127.0.0.1 or localhost
+
+## How to install Metamod:Source and Sourcemod
+
+Now with a working TF2 server, you will need to install Metamod:Source
+and Sourcemod.
+
+https://www.sourcemm.net/downloads.php?branch=stable
+
+1. Click the OS that matches the OS you are on (Either Windows or Linux).
