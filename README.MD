@@ -796,5 +796,271 @@ It can take a while for random to accept the changes you make in a PR ('Pull Req
 
 To that end, random will likely comment on your pull request with "this needs a rebase"
 or something similar. By rebasing, you replay all commits
-that you have ontop of the latest 
+that you have ontop of the latest master commit, ensuring the history is kept clean.
+
+When you work in git, it's likely that you will be making a bunch of trash commits
+before you finally arrive at the final solution you want.
+
+But making a PR with a bunch of trash commits can look ugly, and distract from the most important parts when doing a review. You want any commits made after that to be a result of fixes or suggestions
+to come from code reviews from the others who work on the repo (more eyeballs = more bugs caught).
+
+To that end, we will run a script in order to help prepare a branch for you
+for a silly (but real) scenario.
+
+### Preparing a branch for rebase.
+
+1. ensure that MyTestFile.txt contains exactly the text as it should
+if you have followed the tutorial so far:
+
+```
+Hello World!
+And welcome to
+the Dominatening!
+```
+
+If it does not, if it contains a empty line before and after etc, then while on the master branch, use notepad/nano or whatever text editor you have and ensure the .txt file contains
+exactly the text, then save the file and make a commit on the master branch so it's prepared properly.
+
+
+2. Pick the correct script according to your OS.
+
+
+Linux:
+
+```
+#!/bin/sh
+set -eu
+
+EXPECTED_REPO_NAME="mytestrepo"
+EXPECTED_BRANCH="rebasetest"
+SLEEP_SECONDS=2
+
+REPO_PATH="${1:-}"
+FILE_PATH="${2:-}"
+
+if [ -z "$REPO_PATH" ] || [ -z "$FILE_PATH" ]; then
+    echo "Usage: $0 <path-to-repo> <file-path-in-repo-root>"
+    exit 1
+fi
+
+# Resolve repo root
+REPO_ROOT="$(cd "$REPO_PATH" && git rev-parse --show-toplevel 2>/dev/null)" || {
+    echo "ERROR: Not a git repository: $REPO_PATH"
+    exit 1
+}
+
+REPO_NAME="$(basename "$REPO_ROOT")"
+if [ "$REPO_NAME" != "$EXPECTED_REPO_NAME" ]; then
+    echo "ERROR: Repo is '$REPO_NAME', expected '$EXPECTED_REPO_NAME'"
+    exit 1
+fi
+
+CURRENT_BRANCH="$(git -C "$REPO_ROOT" rev-parse --abbrev-ref HEAD)"
+if [ "$CURRENT_BRANCH" != "$EXPECTED_BRANCH" ]; then
+    echo "ERROR: On branch '$CURRENT_BRANCH', expected '$EXPECTED_BRANCH'"
+    exit 1
+fi
+
+FILE="$REPO_ROOT/$FILE_PATH"
+if [ ! -f "$FILE" ]; then
+    echo "ERROR: File does not exist: $FILE_PATH"
+    echo "Refusing to create new files. Exiting."
+    exit 1
+fi
+
+commit() {
+    git -C "$REPO_ROOT" add "$FILE_PATH"
+    git -C "$REPO_ROOT" commit -m "$1"
+    sleep "$SLEEP_SECONDS"
+}
+
+replace_line_5() {
+    NEW_LINE="$1"
+
+    awk -v repl="$NEW_LINE" '
+        NR==5 { print repl; next }
+        { print }
+    ' "$FILE" > "$FILE.tmp"
+
+    mv "$FILE.tmp" "$FILE"
+}
+
+# ---- first commit: force exactly one blank line + broken line ----
+awk '
+{ print }
+END {
+    print ""
+    print "Match begns in 10 seconds!"
+}
+' "$FILE" > "$FILE.tmp"
+
+mv "$FILE.tmp" "$FILE"
+commit "initial commit on branch rebasetest"
+
+# ---- Replacing line 5 steps ----
+
+replace_line_5 "Match begins in 10 secods!"
+commit "typo fix? fuck why is it not working"
+
+replace_line_5 "match begins in 10 seconds!"
+commit "case tweak maybe?"
+
+replace_line_5 "Match begins in ten seconds!"
+commit "words vs numbers? idk"
+
+replace_line_5 "Match begins in 10 seconds!"
+commit "Added a new line to MyTestFile.txt"
+
+echo "Script is done!"
+```
+
+Windows:
+
+```
+param (
+    [Parameter(Mandatory=$true)]
+    [string]$RepoPath,
+
+    [Parameter(Mandatory=$true)]
+    [string]$FilePath
+)
+
+$ErrorActionPreference = "Stop"
+
+$expectedRepoName = "mytestrepo"
+$expectedBranch   = "rebasetest"
+$sleepSeconds     = 2
+
+# Resolve repo root
+$repoRoot = git -C $RepoPath rev-parse --show-toplevel 2>$null
+if (-not $repoRoot) {
+    throw "Not a git repository: $RepoPath"
+}
+
+$repoName = Split-Path $repoRoot -Leaf
+if ($repoName -ne $expectedRepoName) {
+    throw "Repo is '$repoName', expected '$expectedRepoName', please check the path you gave. The reponame is whatever your git repo folder is and it should be '$expectedRepoName'."
+}
+
+$currentBranch = git -C $repoRoot rev-parse --abbrev-ref HEAD
+if ($currentBranch -ne $expectedBranch) {
+    throw "On branch '$currentBranch', expected '$expectedBranch', have you created '$expectedBranch' and is it based on master and is it checked out?"
+}
+
+$file = Join-Path $repoRoot $FilePath
+if (-not (Test-Path $file)) {
+    Write-Error "File does not exist: $FilePath"
+    Write-Error "Refusing to create new files. Exiting."
+    exit 1
+}
+
+function Commit-Step($message) {
+    git -C $repoRoot add $FilePath
+    if ($LASTEXITCODE -ne 0) { throw "git add failed" }
+
+    git -C $repoRoot commit -m $message
+    if ($LASTEXITCODE -ne 0) { throw "git commit failed" }
+
+    Start-Sleep -Seconds $sleepSeconds
+}
+
+function Replace-Line5($text) {
+    $lines = Get-Content $file
+
+    # Ensure the file has at least 5 lines
+    while ($lines.Count -lt 5) {
+        $lines += ""
+    }
+
+    $lines[4] = $text   # line 5 (0-based index)
+    Set-Content $file $lines
+}
+
+# ---- first commit: force blank line + broken line as lines 4 and 5 ----
+$lines = Get-Content $file
+
+# Ensure at least 3 lines (sanity; should already be true)
+while ($lines.Count -lt 3) {
+    $lines += ""
+}
+
+# Ensure line 4 is blank
+$lines += ""
+
+# Line 5: broken message
+$lines += "Match begns in 10 seconds!"
+
+Set-Content $file $lines
+Commit-Step "initial commit on branch rebasetest"
+
+# ---- Replacing line 5 steps ----
+
+Replace-Line5 "Match begins in 10 secods!"
+Commit-Step "typo fix? fuck why is it not working"
+
+Replace-Line5 "match begins in 10 seconds!"
+Commit-Step "case tweak maybe?"
+
+Replace-Line5 "Match begins in ten seconds!"
+Commit-Step "words vs numbers? idk"
+
+Replace-Line5 "Match begins in 10 seconds!"
+Commit-Step "Added a new line to MyTestFile.txt"
+
+Write-Host "Script is done!"
+```
+
+3. Place the script outside of your repo folder. For example in github-repos folder.
+name the file "prep_rebase.EXT"
+and replace EXT in the filename with either .sh extension for Linux, or .ps1 for Windows.
+
+If you are using Notepad to create the script on Windows. Ensure filetype
+is set to "All Files" and ensure the filename is prep_rebase.ps1
+before you save it, otherwise it does not become a script, but just a normal .txt file.
+
+4. After that, open a new terminal at the location of the script
+and run it like this (do not run any commands on your repo in the other terminal while the script is running,
+let the script finish properly):
+
+Linux (you may need to grant the .sh file the permission to execute as script, search the web):
+
+`./prep_rebase.sh ~/Documents/github-repos/mytestrepo MyTestFile.txt`
+
+Windows:
+
+`powershell -NoProfile -ExecutionPolicy Bypass -File .\prep_rebase.ps1 C:\Users\YourUserName\Documents\github-repos\mytestrepo MyTestFile.txt`
+
+The script is not meant and must not be run twice, and must be run with a fresh rebasetest branch. 
+
+After a couple of seconds, the script should be done.
+In your repo, you should be able to use the `git log --oneline --decorate`
+command and see the new trash commits, then the final commit that has a sensible 
+commit message.
+
+### Setting up master to be one commit ahead.
+
+For a rebase to make any sense, master needs to be 1 commit ahead.
+Since we are not yet going to learn about conflict resolution, the easiest thing we can do are the following:
+
+1. Check out the master branch
+2. Edit the MyTestFile.txt so it goes from this:
+
+```
+Hello World!
+And welcome to
+the Dominatening!
+```
+
+TO
+
+```
+# Demo file for rebase tutorial
+Hello World!
+And welcome to
+the Dominatening!
+```
+
+3. Save the file, then commit it with a sensible message like 'Added a comment to the top of MyTestFile.txt'.
+
+### Bringing it all together and doing the rebase.
 
