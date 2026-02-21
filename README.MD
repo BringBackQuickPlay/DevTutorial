@@ -1539,7 +1539,7 @@ Your local `master` is not a work branch.
 It exists only as a **clean baseline** that matches the upstream repository when needed.
 
 
-## Development setup approach used in this tutorial
+### Development setup approach used in this tutorial
 
 There are many valid ways to set up a Git development environment.
 
