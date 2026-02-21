@@ -18,9 +18,10 @@ for getting setup.
 * Fetching, merging from, or pulling from your remote.
 * Rebasing a branch.
 * How to install the TF2 dedicated server.
-* How to install Metamod:Source and Sourcemod
-* How to fork the Castaway.tf repo
-* How to work with Sourcemod
+* How to install Metamod:Source and Sourcemod.
+* How to fork the Castaway.tf repo.
+* Installing the dependencies to run the reverts.sp plugin and adding dependencies to compile it.
+* How to work with Sourcemod.
 
 
 After all that, we will go trough some additional things
@@ -1477,13 +1478,144 @@ You might need to use noclip and teleports and a bunch of stuff
 while you develop for Castaway.tf, thus it might be prudent to add +sv_cheats 1
 to your launch script.
 
+---
+
 Return to this tutorial when you have successfully installed the TF2 dedicated server and launched it once. Also try joining it. It will be on 127.0.0.1 or localhost
+
+Also when you change map on the server, never use the map command.
+use the changelevel command, otherwise the server WILL crash.
+Oh and do not launch any win64 or linux64 version of srcds.
+The reverts do NOT work on 64 bit, and likely
+will not for the forseeable future.
 
 ## How to install Metamod:Source and Sourcemod
 
 Now with a working TF2 server, you will need to install Metamod:Source
 and Sourcemod.
 
+Metamod:Source
 https://www.sourcemm.net/downloads.php?branch=stable
 
 1. Click the OS that matches the OS you are on (Either Windows or Linux).
+2. Extract the contents of the zip/tar.gz file somewhere.
+
+SourceMod:
+https://www.sourcemod.net/downloads.php?branch=stable
+
+1. Click the OS that matches the OS you are on (Either Windows or Linux).
+2. Extract the contents of the zip/tar.gz file somewhere.
+
+Now:
+
+1. Combine both addons folders you got from extracting from the two files.
+2. Copy this entire combined addons folder and paste it into the `tf` folder of your dedicated server install.
+3. Launch the server once to allow Sourcemod to update it's gamedata. Then close the server.
+
+## How to fork and clone the Castaway.tf repo
+
+A **fork** is a personal copy of a Git repository that exists on a server (for example, GitHub).
+It allows you to experiment and make commits without having any ability to damage the original repository.
+
+A **clone** is a local copy of a repository on your own computer.
+This is where you actually do your work.
+Any changes you make locally stay local until you explicitly push them somewhere.
+
+In short:
+
+- **Fork** → your personal copy on GitHub
+- **Clone** → your working copy on your computer
+
+
+## Important rules for Castaway.tf
+
+For Castaway.tf, it is important to understand that the **`master` branch is treated as read-only**.
+
+With the exception of *random*, no one commits directly to `master`.
+
+You should **never create your own commits on `master`** (not locally, not on your fork).
+All real development work must happen on feature branches.
+
+Your local `master` is not a work branch.
+It exists only as a **clean baseline** that matches the upstream repository when needed.
+
+
+## Development setup approach used in this tutorial
+
+There are many valid ways to set up a Git development environment.
+
+For this tutorial, we use a setup where you will barely interact with the GitHub website at all,
+except when creating pull requests.
+Most of the work will be done from the command line.
+
+
+## Forking and cloning the repository
+
+1. Go to the Castaway.tf repository:
+   https://github.com/rsedxcftvgyhbujnkiqwe/castaway-plugins
+
+2. Click the **Fork** button.
+3. Make no changes and press **Create fork**.
+4. Wait for GitHub to finish creating the fork.
+5. Click the green **<> Code** button.
+6. Make sure **HTTPS** is selected, then click the copy button.
+7. Open a terminal in the `github-repos` folder created earlier in the tutorial.
+8. Run:
+   `git clone URL`
+   where `URL` is the address you copied in step 6.
+9. Enter the cloned repository:
+   `cd castaway-plugins`
+
+
+### Adding the upstream (read-only) remote
+
+We want to be able to fetch new commits from the original Castaway.tf repository, but never push to it.
+
+Run the following commands:
+
+git remote add upstream https://github.com/rsedxcftvgyhbujnkiqwe/castaway-plugins.git
+git remote set-url --push upstream no_push
+
+This results in:
+- `origin` → your fork (fetch + push)
+- `upstream` → original repository (fetch only)
+
+Trying to push to `upstream` will now fail immediately.
+
+
+### Updating your local master baseline
+
+Your local `master` is a **baseline**, not a work branch.
+Updating it does not create commits; it only moves your `master` pointer to commits that already exist upstream.
+
+To update your local `master` so it matches the current upstream state, run:
+
+git fetch upstream
+git checkout master
+git reset --hard upstream/master
+
+The final command discards any local commits on `master`
+and moves it's commit pointer to reflect what the original repo master is.
+
+In many projects this would be dangerous.
+For Castaway.tf, this is intentional, because `master` is never used for development.
+If there were local commits on `master`, they were mistakes.
+
+
+### Updating your fork’s master baseline
+
+Your fork (`origin`) also has a `master` branch.
+After updating your local `master`, you should update your fork’s `master` to reflect the same upstream state.
+
+Update your fork like this:
+
+git push origin master --force-with-lease
+
+Summary:
+- You never add your own commits to `master`.
+- `master` is a clean baseline, updated only when needed.
+- All real work happens on feature branches.
+
+## Installing the dependencies to run the reverts.sp plugin and adding dependencies to compile it.
+
+You are going to need to fullfill the dependencies that the reverts plugin has
+in order to 
