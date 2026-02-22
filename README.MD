@@ -97,7 +97,7 @@ but this tutorial will not focus on that. What it means is that
 when you for example need to resolve a conflict in git (more on that later), git will open your chosen editor to do stuff in.
 
 Another thing the installer will ask you about is the default branch name,
-You want to select the option that allows you to set your own, and ensure it says "master" (without the "").
+You want to select the option that allows you to set your own, and ensure it says `master`.
 
 When you are done with the install, open the Windows Start Menu and start typing 'Powershell'. Start Powershell.
 
