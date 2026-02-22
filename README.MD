@@ -14,6 +14,7 @@ for getting setup.
 * Setting up SSH key and testing connection to Github (Linux)
 * The basics of navigating in a terminal
 * Creating a repository (aka 'repo') in git.
+* Your first commit
 * Making a branch in git and using merge
 * Creating a repo on Github and pushing to it.
 * Fetching, merging from, or pulling from your remote.
@@ -394,6 +395,10 @@ The first command:
 Will set the email of the commiter on this repo. You want to enter the github noreply email you aquired into the ""
 so the command looks like this:
 
+`git config user.email "numbers+githubusername@users.noreply.github.com"`
+
+Where the e-mail is the noreply email of your github account.
+
 `git config user.name ""`
 Set the name that will be displayed on the commit. Here you want to set it to the same you have on Github, if you did not set a specific name in the Profile in Settings on Github, use the github account name. You can technically use whatever you want here, but please be consistent.
 
@@ -435,12 +440,12 @@ A branch is a diverging point usually based on another branch for the purposes o
 
 This allows people to co-operate on developing the software without interrupting eachother. When things go well, this can lead to a situation where there are no so called 'conflicts', allowing branches to seamlessly be merged into master. And if a conflict DOES appear, git provides tools and solutions to resolving these conflicts.
 
-Creating a new branch based on master (or based on any branch really) is done by using the `git checkout` command. This command normally checks out a certain branch (which typically will be the latest commit that branch has), but by passing a flag to the command, we will instead create a new branch (check git status first and ensure you are on master:
+Creating a new branch based on master (or based on any branch really) is done by using the `git checkout` command. This command normally checks out a certain branch (which typically will be the latest commit that branch has), but by passing a flag to the command, we will instead create a new branch (check git status first and ensure you are on master):
 
 `git checkout -b mytestbranch`
 This creates a new branch called 'mytestbranch', based on whatever branch you are currently on.
 
-At the same time, it also checks out this new branch for you, which means you have now switches branch from master to mytestbranch
+At the same time, it also checks out this new branch for you, which means you have now switched branch from 'master' to 'mytestbranch'.
 
 Type git status and you should now see this:
 
@@ -466,7 +471,7 @@ Let's try making a new commit on this branch to see how it changes.
 Open your MyTestFile.txt file and add this line:
 'And welcome to'
 
-Save the file, and like you learned before in 'My first commit', make a commit. When you make commits,
+Save the file, and like you learned before in 'Your first commit', make a commit. When you make commits,
 they should be short and descriptive of what changes the commits do.
 For this example tutorial, I suggest a message like
 'Added a new line of text to file MyTestFile.txt'.
