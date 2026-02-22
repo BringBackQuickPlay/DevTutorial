@@ -1596,9 +1596,10 @@ git reset --hard upstream/master
 The final command discards any local commits on `master`
 and moves it's commit pointer to reflect what the original repo master is.
 
-In many projects this would be dangerous.
+In some other projects this would be dangerous (it all depends on the workflow the team/maintainer is using)
 For Castaway.tf, this is intentional, because `master` is never used for development.
-If there were local commits on `master`, they were mistakes.
+If there were local commits on the `master` branch that do not exist upstream, they are
+likely commits you have accidentally merged into master.
 
 
 ### Updating your fork’s master baseline
@@ -1615,7 +1616,17 @@ Summary:
 - `master` is a clean baseline, updated only when needed.
 - All real work happens on feature branches.
 
+One more thing: While I did mention that it's good to rebase
+onto latest master, this is not always neccesary, once you have uploaded your branch
+to your origin, you should try opening a pull request. Github will tell you if it can be cleanly merged or not. If it can be cleanly merged and you are done.
+
 ## Installing the dependencies to run the reverts.sp plugin and adding dependencies to compile it.
 
 You are going to need to fullfill the dependencies that the reverts plugin has
-in order to 
+in order to run it on the server, and to compile it.
+
+This is when you will need to decide if you are going to
+go old-school-ish with a editor (anything from Notepad to Sublime etc)
+or a full IDE. The obvious benefit with using a IDE
+is that you get things like autocompletion etc.
+
