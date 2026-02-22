@@ -86,7 +86,7 @@ Windows have a fairly easy time getting setup with git.
 Begin by visiting this link:
 https://git-scm.com/install/windows
 
-You want Windows/X64
+You want `Windows/X64`
 Run the installer, and click next on everything besides two things:
 
 When the installer asks you about what editor to use for git, I suggest
