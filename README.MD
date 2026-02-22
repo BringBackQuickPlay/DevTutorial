@@ -28,7 +28,7 @@ After all that, we will go trough some additional things
 that are more specific to Castaway.tf's repo, such as
 general dev conventions.
 
-For learning sourcemod itself, you will have to go find a tutorial online, or be a lazy bastard like me and vibecode half the things and learn "as you go".
+For learning sourcemod itself, you will have to go find a tutorial online, or be a lazy bastard like me and vibecode (AI) half the things and learn "as you go".
 
 
 ## How to create a Github account
@@ -828,6 +828,8 @@ So master looks like this:
 `M100 ─ M101 ─ M102`
 
 Your branch is now **behind** master.
+More accurately, you might see something like this in github (not git):
+`This branch is 5 commits ahead, 2 commits behind githubuser/reponame:master`.
 
 ---
 
@@ -844,9 +846,9 @@ your branch: M100 ─ B101 ─ B102 ─ B103 ─ B104 ─ B105
 
 At this point, merging becomes messier than it needs to be. This often leads to:
 
-- confusing history
-- unnecessary merge commits
-- extra work for the maintainer (aka random)
+- confusing history.
+- unnecessary merge commits.
+- extra work for the maintainer.
 
 This is why you will often see comments like:
 
@@ -866,6 +868,10 @@ After rebasing, the history becomes:
 Ideally, when you use interactive rebase in order to squash commits etc, it would look like this:
 
 `M100 ─ M101 ─ M102 ─ B105`
+
+So when the maintainer merged your branch into the original repo master,
+it will end up looking like this:
+`M100 ─ M101 ─ M102 ─ M103` where M103 = B105.
 
 Where B105 was the final commit you tested yourself to the point where you feel it's ready for a pull request (or if you already made the pull request while master was still only on
 M100 and then it moved on to M102).
@@ -1152,8 +1158,8 @@ commit message.
 
 ### Setting up master to be one commit ahead.
 
-For a rebase to make any sense, master needs to be 1 commit ahead.
-Since we are not yet going to learn about conflict resolution, the easiest thing we can do are the following:
+For a rebase to make any sense, master needs to be at minimum 1 commit ahead.
+It is entire possible to create a conflict in this step, but at this point in the tutorial we are not yet going to go into what a conflict is, so we will do the following:
 
 1. Check out the master branch
 2. Edit the MyTestFile.txt so it goes from this:
@@ -1215,6 +1221,7 @@ be able to "squash" the commits.
 Run this command in your repo while you have rebasetest branch checked out:
 
 `git rebase -i master`
+(The branch you choose is the branch that the currently checked out branch will be rebased onto. It's entirely possible to have a non-master branch that you want to rebase onto, but that's nothing the tutorial will go trough).
 
 You will see this:
 
@@ -1259,7 +1266,7 @@ pick fe49074 # Added a new line to MyTestFile.txt
 
 Obviously the hashes will not all be the same.
 If on Windows and you picked Notepad as your git editor, git will not continue until 
-you save the weird git-rebase-todo file and then close it's tab. It's very important that you do not try to Save As or anything fancy, just Ctrl+S when done.
+you save the weird git-rebase-todo file and then close it's tab. It's very important that you do not try to Save As or anything fancy, just Ctrl+S when done editing the file.
 
 On Linux, you will likely have a terminal based editor such as nano or something
 as your git editor, in which case git only continues when you
@@ -1310,7 +1317,7 @@ squash fe49074 # Added a new line to MyTestFile.txt
 ```
 
 Then Ctrl+S and then close the tab.
-Merely a second after (on huge git repos it can take longer)
+Merely a second after (on huge git repos it can take a couple seconds longer)
 your editor will again open a new file, this time called 
 COMMIT_EDITMSG.
 
@@ -1379,6 +1386,7 @@ Added a new line to MyTestFile.txt
 ```
 
 Then Ctrl+S and close the tab.
+Unless you have a really good reason to do so, don't keep the old commit messages.
 
 This should be the result in the terminal after you are done (It will be different in Linux):
 
@@ -1405,7 +1413,7 @@ ae21d86 (mytestbranch) Added a new line of text to file MyTestFile.txt
 467c134 Initial commit.
 ```
 
-Notice now how the final commit of our rebasetest branch is above that 1 commit that was ahead in master? This is how you keep a clean history.
+Notice now how the final commit of our rebasetest branch is above that 1 commit that was ahead in master? This results in a very clean history without distracting "trash" commits.
 
 Now you are ready to merge this into master like you did before:
 Check out master, then do `git merge rebasetest`
@@ -1425,12 +1433,12 @@ nothing to commit, working tree clean
 
 The reason why it says that you are ahead of master by 2 commits is because
 you never pushed the "Added a comment to the top of MyTestFile.txt" commit you made
-to master that put it 1 commit ahead of rebasetest.
+to master that put it 1 commit ahead of rebasetest. And because we technically created a new commit with this rebase, it results in our local master behind ahead of origin/master by 2.
 
 Go ahead and run the command `git push` to push your updated master
 to your github repo.
 
-The text in the textfile both on the github repo's master and your local master should be:
+The text in the textfile both on the github repo's master and your local master should end up being:
 
 ```
 # Demo file for rebase tutorial
