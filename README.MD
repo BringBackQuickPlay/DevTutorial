@@ -273,7 +273,7 @@ can lead to catastrophic irreversible data loss. Stick to the GUI for now when y
 It's time to start learning how to use Git.
 
 ### Folder structure
-1. Start by using the `cd` command to move into your user folder.
+1. Start by using the `cd` command to move into your user folder, then the `Documents` folder.
 
 2. When there, make a folder named 'castaway', we will be using this folder for the rest of the tutorial.
 
@@ -285,8 +285,8 @@ It's time to start learning how to use Git.
 
 Unless you are told to change otherwise, you current working directory should be:
 
-Windows: `C:\Users\YourUserName\castaway\repos\mytestrepo`
-Linux: `/home/yourusername/castaway/repos/mytestrepo`
+Windows: `C:\Users\YourUserName\Documents\github-repos\mytestrepo`
+Linux: `/home/yourusername/Documents/github-repos/mytestrepo`
 
 ### Initializing a git repo.
 
