@@ -114,7 +114,7 @@ This sets the default branchname to master, which is what proper people will hav
 
 Being proper people, we will not allow that bullshit.
 
-The next section 'Setting up SSH key and testing connection to Github (Linux)' is specifically for Linux, Windows peeps can skip to 'The basics of navigating in a terminal', as we will deal with the setup of authentication for Windows users in the "Pushing" part of the 'Comitting, pushing, merge in git'.
+The next section 'Setting up SSH key and testing connection to Github (Linux)' is specifically for Linux, Windows peeps can skip to `The basics of navigating in a terminal`, as we will deal with the setup of authentication for Windows users in the "Pushing" part of the 'Comitting, pushing, merge in git'.
 
 ## Setting up a SSH key (Linux)
 
