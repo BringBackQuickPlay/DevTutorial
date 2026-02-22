@@ -1624,7 +1624,7 @@ After updating your local `master`, you should update your fork’s `master` to 
 
 Update your fork like this:
 
-git push origin master --force-with-lease
+`git push origin master --force-with-lease`
 
 Summary:
 - You never add your own commits to `master`.
