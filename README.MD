@@ -534,7 +534,7 @@ This is called a fast-forward merge.
 When master has changed, Git creates a new commit to join the two branches.
 
 In some cases, a merge may result in a conflict that Git cannot solve automatically.
-We will go through that later in the tutorial.
+We will go through what conflicts are much much later in the tutorial.
 
 Now, if you look again in notepad, you will see that the line 'And welcome to' has re-appeared while you have the 'master' branch checked out.
 
@@ -547,7 +547,7 @@ COMMAND: git log --oneline
 ```
 Now master is on the same commit as the one you made in the 'mytestbranch'.
 
-When you work on the Castaway.tf repo, you will NEVER be using merge yourself since random owns the repo. Only random may merge code into master. You should NEVER do it unless you are updating your local 'master' in the Castaway.tf fork you made. More on how to work with the Castaway.tf repo later.
+When you work on the Castaway.tf repo, you will NEVER be using merge on the 'master' branch yourself since random owns the repo. Only random may merge code into master. You should NEVER do it unless you are updating your local 'master' in the Castaway.tf fork you made. More on how to work with the Castaway.tf repo later.
 
 ## Creating a repo on Github and pushing to it.
 
@@ -555,16 +555,16 @@ For Linux Users: Make sure you followed all the steps in the 'Setting up SSH key
 chapter before continuing.
 
 We need a server to "push" to.
-In our case (and since you will be using Castaway.tf's Github repo later on), it will be a repo on Github. That's why we spent time early on preparing for it.
+In our case (and since you will be using Castaway.tf's Github repo later on), it will be a repo on Github. That's why we spent time early on preparing by creating a Github account etc.
 
 The idea is that you have a local repo where you code, and a remote repo that we push the local commits and branches to for storage and so others can see it, review it, clone the repo or whatever.
 
-When you work on your own project (or fork), it's so called "online" is often called "origin". When you push and fetch/pull from the original project that you forked from, we call that "upstream"
+When you work on your own project (or fork), it's so called "online" is often called "origin". When you fetch/pull from the original project that you forked from, we call that "upstream". Generally unless you are a maintainer or own the upstream repo (which would be called origin for you), you never push to it (nor would it allow you to do it unless you have the permissions for it).
 
 To use the example of Castaway.tf:
 
-randoms repo is the upstream
-your clone of it that you have on your github account is origin.
+randoms repo is the upstream.
+your fork of it that you have on your github account is origin.
 
 To begin with, you need to add some 'remotes' to push and fetch from.
 
@@ -582,7 +582,7 @@ Wait a second or two, then
 look in the box that says
 '…or push an existing repository from the command line'.
 
-In that box, copy the first command (DO NOT COPY AND PASTE ALL COMMANDS AT ONCE, GITHUB IS RETARDED) only.
+In that box, copy the first command (DO NOT COPY AND PASTE ALL COMMANDS AT ONCE, GITHUB IS RETARDED). We will be pasting it in into a terminal soon.
 
 In your local git repo, ensure you have 'master' checked out (remember? `git status` to check what branch you are on. You can also use git branch and check which one has a * on it, but it's better to check with git status to ensure working directory is clean),
 then paste in the 'git remote add ...'
@@ -605,7 +605,7 @@ If you do, good job.
 
 ### Preparing for push.
 
-Now that the remotes have been added, we can prepare for pushing.
+Now that the remote has been added, we can prepare for pushing.
 
 For Linux users, you should already be set up for pushing, but if you came back to this tutorial later and have closed the terminal or logged out of your user, go back to Step 5, 6, and 7
 of the 'Setting up SSH key and testing connection to GitHub (Linux)' chapter
