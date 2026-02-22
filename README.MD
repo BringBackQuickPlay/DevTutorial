@@ -580,7 +580,7 @@ Make NO other changes to the configuration (this includes making sure Add README
 Click 'Create repository'.
 Wait a second or two, then
 look in the box that says
-'…or push an existing repository from the command line'.
+`…or push an existing repository from the command line`.
 
 In that box, copy the first command (DO NOT COPY AND PASTE ALL COMMANDS AT ONCE, GITHUB IS RETARDED). We will be pasting it in into a terminal soon.
 
@@ -758,11 +758,11 @@ Crucially, it does not apply those changes to your local working branch (such as
 
 Which remote is fetched depends on your configuration. In the common case where you have only one remote and an upstream set, git fetch will fetch from that remote automatically. You can check which remotes are configured with:
 
-'git remote -v'
+`git remote -v`
 
 If you have several remotes (which I will go through later for the Castaway.tf repository, especially if you prefer doing more work from the terminal and only using GitHub for PRs later), it is often better to be explicit and run:
 
-'git fetch origin'
+`git fetch origin`
 
 This ensures you are fetching from 'origin' specifically, rather than fetching from all remotes or relying on implicit defaults.
 
@@ -772,30 +772,30 @@ Before doing what Git suggests, you may want to inspect the changes first.
 
 You can do so with:
 
-'git diff master..origin/master'
+`git diff master..origin/master`
 
 This shows the differences between your local 'master' branch and 'origin/master'.
 Be careful when using this command directly: on a branch like 'master', this can produce a lot of console output — potentially thousands of lines in large projects.
 
 To make this more manageable, start with a summary view:
 
-'git diff --stat master..origin/master'
+`git diff --stat master..origin/master`
 
 This shows only which files changed and roughly how large those changes are.
 
 If even that is too noisy because many files were touched, you can reduce it further to just filenames:
 
-'git diff --name-only master..origin/master'
+`git diff --name-only master..origin/master`
 
 If you want to inspect a specific file in detail, you can do so like this:
 
-'git diff master..origin/master -- path/to/filename'
+`git diff master..origin/master -- path/to/filename`
 
 You can obtain the correct paths from the output of the --name-only command shown above.
 
 If everything looks good and you are satisfied with the changes, you can merge them into your local branch with:
 
-'git merge origin/master'
+`git merge origin/master`
 
 This merges the already-fetched changes from the remote into your local 'master'.
 
