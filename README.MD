@@ -397,7 +397,8 @@ so the command looks like this:
 
 `git config user.email "numbers+githubusername@users.noreply.github.com"`
 
-Where the e-mail is the noreply email of your github account.
+Where the e-mail is the noreply email of your github account that you saw in step 9
+of 'How to create a Github account' chapter.
 
 `git config user.name ""`
 Set the name that will be displayed on the commit. Here you want to set it to the same you have on Github, if you did not set a specific name in the Profile in Settings on Github, use the github account name. You can technically use whatever you want here, but please be consistent.
