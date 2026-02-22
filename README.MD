@@ -3,7 +3,8 @@
 Have you ever wondered what you could do to contribute to Castaway.tf?
 One thing you could do, is become familiar with the coding (more like scripting really, but who gives a fuck? Normies certainly don't) aspect of Castaway.tf
 
-Bold You too can become a keyboard slave! End Bold. Screaming into the night at compilation errors and help rectify the mistake that is Post-2013 Valve.
+**You too can become a keyboard slave!** 
+Screaming into the night at compilation errors and help rectify the mistake that is Post-2013 Valve.
 
 This tutorial will teach you several things (the basics mind you)
 for getting setup.
