@@ -1643,9 +1643,12 @@ in order to run it on the server, and to compile it.
 This is when you will need to decide if you are going to
 go old-school-ish with a editor (anything from Notepad to Sublime etc)
 or a full IDE. The obvious benefit with using a IDE
-is that you get things like autocompletion etc.
+is that you get things like autocompletion etc and other stuff that makes life easier.
 
 But first, let's gather up the dependencies you need.
+
+
+## Dependencies to run the reverts.sp plugin
 I've gone ahead and created scripts to help you with this.
 
 Pick the appropiate script for your os.
@@ -1890,3 +1893,16 @@ finally {
     }
 }
 ```
+
+## Dependencies to compile the reverts plugin.
+
+The Castaway.tf repo fork (and local clone of it, aka the `castaway-plugins` folder) that you have,
+contains everything you need. 
+The only thing you need to do, is to copy the
+
+`include` folder
+from `addons/sourcemod/scripting`
+in the tf folder of your dedicated tf2 server, and then
+the spcomp file from addons/sourcemod/scripting.
+
+place this spcomp file in the scripting folder of the Castaway.tf repo folder.
