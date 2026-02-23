@@ -1645,3 +1645,248 @@ go old-school-ish with a editor (anything from Notepad to Sublime etc)
 or a full IDE. The obvious benefit with using a IDE
 is that you get things like autocompletion etc.
 
+But first, let's gather up the dependencies you need.
+I've gone ahead and created scripts to help you with this.
+
+Pick the appropiate script for your os.
+Paste it into your text editor and create them 
+as `fetch-revert-deps.sh` for linux.
+or `fetch-revert-deps.ps1` for windows.
+
+Command to run it on Windows:
+`powershell -ExecutionPolicy Bypass -File .\fecth-revert-deps.ps1`
+
+Linux users can make do with a simple `./fetch-revert-deps.sh`, make sure you give the file permission to run as script
+
+The script will prompt you at the end if you want to delete the .tmp (Linux)
+or tmp (Windows) folder. Check the path so you are not deleting something else on the computer, answer y when ready.
+
+a `linux` or `windows` folder will be created in the same folder where you placed the script file
+and ran it from. Copy the addons folder to your tf folder on your dedicated TF2 server.
+
+**Linux:**
+
+```
+#!/bin/sh
+set -eu
+
+# ----- OS GUARD -----
+if [ "$(uname -s)" != "Linux" ]; then
+    echo "ERROR: This script must be run on Linux." >&2
+    exit 1
+fi
+
+TMPDIR=".tmp"
+TMP_ABS="$(cd "$(dirname "$TMPDIR")" && pwd)/$TMPDIR"
+
+cleanup() {
+    echo
+    echo "Temporary files were extracted to:"
+    echo "  $TMP_ABS"
+    echo
+    printf "Delete temporary files from extraction phase? Check path first! [y/N]: "
+    read ans || true
+
+    case "$ans" in
+        y|Y)
+            echo "Deleting temporary files..."
+            cd .. || exit 1
+            rm -rf "$TMPDIR"
+            ;;
+        *)
+            echo "Keeping temporary files."
+            ;;
+    esac
+}
+
+trap cleanup EXIT
+
+# ----- SETUP -----
+mkdir -p \
+  linux/addons/sourcemod/{extensions,gamedata,plugins,translations} \
+  "$TMPDIR"
+
+cd "$TMPDIR"
+
+# ================= TF2Items =================
+curl -LO https://builds.limetech.io/files/tf2items-1.6.4-hg279-linux.zip
+unzip -q tf2items-1.6.4-hg279-linux.zip -d tf2items-linux
+
+cp tf2items-linux/addons/sourcemod/extensions/tf2items.ext.2.ep2v.so \
+   ../linux/addons/sourcemod/extensions/
+cp tf2items-linux/addons/sourcemod/extensions/tf2items.autoload \
+   ../linux/addons/sourcemod/extensions/
+cp tf2items-linux/addons/sourcemod/gamedata/tf2.items.txt \
+   ../linux/addons/sourcemod/gamedata/
+
+# ================= TF2Attributes =================
+base=https://github.com/FlaminSarge/tf2attributes/releases/download/v1.7.5
+
+curl -LO $base/tf2.attributes.txt
+curl -LO $base/tf2attributes.smx
+
+cp tf2.attributes.txt ../linux/addons/sourcemod/gamedata/
+cp tf2attributes.smx  ../linux/addons/sourcemod/plugins/
+
+# ================= TF2Utils =================
+base=https://github.com/nosoop/SM-TFUtils/releases/download/1.4.0
+
+curl -LO $base/tf2.utils.nosoop.txt
+curl -LO $base/tf2utils.smx
+
+cp tf2.utils.nosoop.txt ../linux/addons/sourcemod/gamedata/
+cp tf2utils.smx         ../linux/addons/sourcemod/plugins/
+
+# ================= SourceScramble =================
+curl -LO https://github.com/nosoop/SMExt-SourceScramble/releases/download/0.7.1/package.tar.gz
+tar -xzf package.tar.gz
+
+if [ ! -f addons/sourcemod/extensions/sourcescramble.ext.so ]; then
+    echo "ERROR: sourcescramble.ext.so not found after extraction." >&2
+    exit 1
+fi
+
+cp addons/sourcemod/extensions/sourcescramble.ext.so \
+   ../linux/addons/sourcemod/extensions/
+
+# ================= nativevotes =================
+curl -LO https://github.com/sapphonie/sourcemod-nativevotes-updated/archive/refs/heads/master.zip
+unzip -q master.zip
+
+cp -r sourcemod-nativevotes-updated-*/addons/sourcemod/translations \
+      ../linux/addons/sourcemod/
+
+echo
+echo "Linux dependencies installed."
+
+# ================= README =================
+cat > ../linux/README.txt <<'EOF'
+addons folder contains dependencies needed to run the reverts.sp plugin.
+copy the addons folder and paste it into the tf folder of your TF2 dedicated server
+EOF
+
+echo "Generated linux/README.txt"
+```
+
+**Windows:**
+
+```
+$ErrorActionPreference = "Stop"
+
+if ($env:OS -ne 'Windows_NT') {
+    Write-Error "This script must be run on Windows."
+    exit 1
+}
+
+function New-Dirs {
+    param ($Base)
+    $paths = @(
+        "$Base/addons/sourcemod/extensions",
+        "$Base/addons/sourcemod/gamedata",
+        "$Base/addons/sourcemod/plugins",
+        "$Base/addons/sourcemod/translations"
+    )
+    foreach ($p in $paths) {
+        New-Item -ItemType Directory -Force -Path $p | Out-Null
+    }
+}
+
+function Download {
+    param ($Url, $Out)
+    Write-Host "Downloading $Url"
+    Invoke-WebRequest -Uri $Url -OutFile $Out
+}
+
+# ----- SETUP -----
+New-Dirs "windows"
+$temp = "tmp"
+
+try {
+    New-Item -ItemType Directory -Force -Path $temp | Out-Null
+
+    # ================= TF2Items (Windows) =================
+    Download "https://builds.limetech.io/files/tf2items-1.6.4-hg279-windows.zip" `
+             "$temp/tf2items-win.zip"
+
+    Expand-Archive "$temp/tf2items-win.zip" "$temp/tf2items-win"
+
+    Copy-Item "$temp/tf2items-win/addons/sourcemod/extensions/tf2items.ext.2.ep2v.dll" `
+              "windows/addons/sourcemod/extensions/"
+    Copy-Item "$temp/tf2items-win/addons/sourcemod/extensions/tf2items.autoload" `
+              "windows/addons/sourcemod/extensions/"
+    Copy-Item "$temp/tf2items-win/addons/sourcemod/gamedata/tf2.items.txt" `
+              "windows/addons/sourcemod/gamedata/"
+
+    # ================= TF2Attributes =================
+    $attrBase = "https://github.com/FlaminSarge/tf2attributes/releases/download/v1.7.5"
+
+    Download "$attrBase/tf2.attributes.txt" "$temp/tf2.attributes.txt"
+    Download "$attrBase/tf2attributes.smx"  "$temp/tf2attributes.smx"
+
+    Copy-Item "$temp/tf2.attributes.txt" "windows/addons/sourcemod/gamedata/"
+    Copy-Item "$temp/tf2attributes.smx"  "windows/addons/sourcemod/plugins/"
+
+    # ================= TF2Utils =================
+    $utilsBase = "https://github.com/nosoop/SM-TFUtils/releases/download/1.4.0"
+
+    Download "$utilsBase/tf2.utils.nosoop.txt" "$temp/tf2.utils.nosoop.txt"
+    Download "$utilsBase/tf2utils.smx"         "$temp/tf2utils.smx"
+
+    Copy-Item "$temp/tf2.utils.nosoop.txt" "windows/addons/sourcemod/gamedata/"
+    Copy-Item "$temp/tf2utils.smx"         "windows/addons/sourcemod/plugins/"
+
+    # ================= SourceScramble (Windows) =================
+    Download "https://github.com/nosoop/SMExt-SourceScramble/releases/download/0.7.1/package.zip" `
+             "$temp/sourcescramble.zip"
+
+    Expand-Archive "$temp/sourcescramble.zip" "$temp"
+
+    $scrambleDll = Join-Path $temp "addons\sourcemod\extensions\sourcescramble.ext.dll"
+
+    if (-not (Test-Path $scrambleDll)) {
+        throw "sourcescramble.ext.dll not found after extraction."
+    }
+
+    Copy-Item $scrambleDll "windows/addons/sourcemod/extensions/"
+
+    # ================= nativevotes =================
+    Download "https://github.com/sapphonie/sourcemod-nativevotes-updated/archive/refs/heads/master.zip" `
+             "$temp/nativevotes.zip"
+
+    Expand-Archive "$temp/nativevotes.zip" "$temp/nativevotes"
+
+    $translations = Get-ChildItem "$temp/nativevotes" -Recurse -Directory |
+                    Where-Object { $_.Name -eq "translations" } |
+                    Select-Object -First 1
+
+    if (-not $translations) {
+        throw "nativevotes translations folder not found."
+    }
+
+    Copy-Item $translations.FullName "windows/addons/sourcemod/" -Recurse -Force
+
+    Write-Host ""
+    Write-Host "Windows dependencies installed."
+
+    # ================= README =================
+    @"
+addons folder contains dependencies needed to run the reverts.sp plugin.
+copy the addons folder and paste it into the tf folder of your TF2 dedicated server
+"@ | Set-Content "windows/README.txt"
+
+    Write-Host "Generated windows/README.txt"
+}
+finally {
+    Write-Host ""
+    Write-Host "Temporary files were extracted to:"
+    Write-Host "  $(Resolve-Path $temp)"
+    Write-Host ""
+    $ans = Read-Host "Delete temporary files from extraction phase? Check path first! [y/N]"
+    if ($ans -match '^[yY]$') {
+        Remove-Item -Recurse -Force $temp
+        Write-Host "Temporary files deleted."
+    } else {
+        Write-Host "Keeping temporary files."
+    }
+}
+```
