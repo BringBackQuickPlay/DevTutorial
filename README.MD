@@ -1,3 +1,4 @@
+**NOTE: This guide has not yet been proofread, and is not even done. Just uploading it here now to keep it safe while I keep working on it.**
 # Guide for setting up a dev enviroment to become credit to team.
 
 Have you ever wondered what you could do to contribute to Castaway.tf?
@@ -1633,7 +1634,8 @@ Summary:
 
 One more thing: While I did mention that it's good to rebase
 onto latest master, this is not always neccesary, once you have uploaded your branch
-to your origin, you should try opening a pull request. Github will tell you if it can be cleanly merged or not. If it can be cleanly merged and you are done.
+to your origin, you should try opening a pull request. Github will tell you if it can be cleanly merged or not. If it can be cleanly merged and you are done
+with working on the feature branch, then feel free to create the pull request even tough you have not rebased on latest master. But if it cannot be cleanly merged, then you MUST rebase onto latest master, cancel the creation process of the pull request, rebase onto the latest castaway.tf master, then open a new pull request and check again.
 
 ## Installing the dependencies to run the reverts.sp plugin and adding dependencies to compile it.
 
