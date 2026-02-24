@@ -23,8 +23,18 @@ for getting setup.
 * How to install the TF2 dedicated server.
 * How to install Metamod:Source and Sourcemod.
 * How to fork the Castaway.tf repo.
-* Installing the dependencies to run the reverts.sp plugin and adding dependencies to compile it.
-* How to work with Sourcemod.
+* Dependencies to compile the reverts plugin.
+* Compiling reverts.sp
+* Overview of Castaway.tf work progress.
+* Doing research.
+* Back to git!
+* Git tags? GIT TAGS!
+* Pull Requests (Finally!)
+* Closing words.
+
+**It's important to know that this tutorial is not
+for teaching you the basics of programming or programming mindset,
+you will need to learn this elsewhere**
 
 
 After all that, we will go trough some additional things
@@ -1903,8 +1913,126 @@ contains everything you need.
 The only thing you need to do, is to copy the
 
 `include` folder
-from `addons/sourcemod/scripting`
-in the tf folder of your dedicated tf2 server, and then
-the spcomp file from addons/sourcemod/scripting.
+and the spcomp file (on Windows it will have a .exe) from
+`tf/addons/sourcemod/scripting` folder into your castaway-plugins/scripting folder
 
-place this spcomp file in the scripting folder of the Castaway.tf repo folder.
+This is what you want the structure to look like this for the `scripting` folder
+(the . represents `castaway-plugins/scripting`):
+
+```
+.
+├── afkmanager.sp
+├── arena-autoscramble.sp
+├── changelevel.sp
+├── chat-adverts.sp
+├── disablesoul.sp
+├── forcestalemate.sp
+├── include
+│   ├── admin.inc
+│   ├── adminmenu.inc
+│   ├── adt_array.inc
+│   ├── adt.inc
+│   ├── adt_stack.inc
+│   ├── adt_trie.inc
+│   ├── banning.inc
+│   ├── basecomm.inc
+│   ├── bitbuffer.inc
+│   ├── clientprefs.inc
+│   ├── clients.inc
+│   ├── commandfilters.inc
+│   ├── commandline.inc
+│   ├── console.inc
+│   ├── convars.inc
+│   ├── core.inc
+│   ├── cstrike.inc
+│   ├── datapack.inc
+│   ├── dbi.inc
+│   ├── dhooks.inc
+│   ├── entity.inc
+│   ├── entitylump.inc
+│   ├── entity_prop_stocks.inc
+│   ├── events.inc
+│   ├── files.inc
+│   ├── float.inc
+│   ├── functions.inc
+│   ├── geoip.inc
+│   ├── halflife.inc
+│   ├── handles.inc
+│   ├── helpers.inc
+│   ├── implodeexplode.inc
+│   ├── keyvalues.inc
+│   ├── lang.inc
+│   ├── logging.inc
+│   ├── mapchooser.inc
+│   ├── menus.inc
+│   ├── morecolors.inc
+│   ├── nativevotes.inc
+│   ├── nextmap.inc
+│   ├── profiler.inc
+│   ├── protobuf.inc
+│   ├── regex.inc
+│   ├── scramble.inc
+│   ├── sdkhooks.inc
+│   ├── sdktools_client.inc
+│   ├── sdktools_engine.inc
+│   ├── sdktools_entinput.inc
+│   ├── sdktools_entoutput.inc
+│   ├── sdktools_functions.inc
+│   ├── sdktools_gamerules.inc
+│   ├── sdktools_hooks.inc
+│   ├── sdktools.inc
+│   ├── sdktools_sound.inc
+│   ├── sdktools_stocks.inc
+│   ├── sdktools_stringtables.inc
+│   ├── sdktools_tempents.inc
+│   ├── sdktools_tempents_stocks.inc
+│   ├── sdktools_trace.inc
+│   ├── sdktools_variant_t.inc
+│   ├── sdktools_voice.inc
+│   ├── sorting.inc
+│   ├── sourcemod.inc
+│   ├── sourcescramble.inc
+│   ├── string.inc
+│   ├── testing.inc
+│   ├── textparse.inc
+│   ├── tf2attributes.inc
+│   ├── tf2condhooks.inc
+│   ├── tf2.inc
+│   ├── tf2items.inc
+│   ├── tf2_stocks.inc
+│   ├── tf2utils.inc
+│   ├── timers.inc
+│   ├── topmenus.inc
+│   ├── usermessages.inc
+│   ├── vector.inc
+│   ├── version_auto.inc
+│   └── version.inc
+├── legacy
+│   ├── NotnHeavy - Old Flamethrower Mechanics.sp
+│   └── NotnHeavy - Pre-Gun Mettle Reverts.sp
+├── nativevotes
+│   ├── data-keyvalues.sp
+│   └── game.sp
+├── nativevotes-basecommands.sp
+├── nativevotes_mapchooser.sp
+├── nativevotes_nominations.sp
+├── nativevotes_rockthevote.sp
+├── nativevotes.sp
+├── nextmap.sp
+├── reverts.sp
+├── spcomp
+├── supersprayhandler.sp
+├── teamcatch.sp
+├── tf2condhooks.sp
+├── votescramble.sp
+└── webshortcuts.sp
+```
+
+You may or may not see the names in different orders. The important thing is that the files are there. If a file is not there or you see some other name after setup, then
+castaway or sourcemod might have added or removed .sp files. The state that I showed you was true as of 2026-02-24.
+
+##
+
+
+
+
