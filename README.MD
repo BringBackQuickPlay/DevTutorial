@@ -2097,16 +2097,14 @@ The general way you want to work with the repo is the following (this is based o
 `optimize/gunboat-damage-calc`. Is it a fix for a issue? Perhaps `issue-xxx/fixed-sound-spam`
 5. Get to coding.
 6. Compile, test your compile on your local TF2 server (unless it's a memorypatch or complicated math, you really don't need to ask for help with testing on the opposite OS in the PR).
-7. Keep repeating steps 5 and 6. Making sure you remember to commit so you don't do to much work in each commit. Don't forget to occasionally push to your castaway.tf repo fork either. You absolutely want to be doing this if you need to ask the rest of us for help instead of sending pastebins and shit.
+7. Keep repeating steps 5 and 6. Making sure you remember to commit so you don't do to much work in each commit. Don't forget to occasionally push to your castaway.tf repo fork either. You absolutely want to be doing this if you need to ask the rest of us for help instead of sending pastebins and shit so you can just link to the branch you are working on, on github.
 8. Once whatever you wanted to do works and you have tested it in as many ways as you can imagine (and bother to do, LOL), make a git tag (more on that later) backup.
 9. Push it a final time to your fork, then go make a PR to the Castaway.tf repo and observe if it says it can be cleanly merged or not.
-
-If it can be cleanly merged, open the PR, don't forget to fill out the template and describe what you have done before you open the PR.
-
-It it CANNOT be cleanly merged, rebase on latest master.
+If it can be cleanly merged, open the PR, don't forget to fill out the template and describe what you have done before you open the PR. It it CANNOT be cleanly merged, rebase on latest master.
 10. Wait for feedback from others or any requests from random.
 (Depending on how busy random is and how complex the PR is, it can take anywhere from a day to several days before it's merged).
 
+### Now what? The PR has been opened.
 If others find bugs, repeat steps 5 and 6 until it's fixed.
 Make sure these commits are sensible and not the typical trash commit messages.
 Also, DO NOT OPEN A NEW PR! The PR you opened earlier will autoupdate with the latest commits each time you push to your fork (origin), as the PR tracks what happens to your origin branch.
