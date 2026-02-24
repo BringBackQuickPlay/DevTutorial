@@ -36,14 +36,6 @@ for getting setup.
 for teaching you the basics of programming or programming mindset,
 you will need to learn this elsewhere**
 
-
-After all that, we will go trough some additional things
-that are more specific to Castaway.tf's repo, such as
-general dev conventions.
-
-For learning sourcemod itself, you will have to go find a tutorial online, or be a lazy bastard like me and vibecode (AI) half the things and learn "as you go".
-
-
 ## How to create a Github account
 
 First, you need a e-mail. 
@@ -1906,6 +1898,9 @@ finally {
 }
 ```
 
+When the script is done, you will see a windows or linux folder, inside
+of it you will see a README.txt, read it for further instructions.
+
 ## Dependencies to compile the reverts plugin.
 
 The Castaway.tf repo fork (and local clone of it, aka the `castaway-plugins` folder) that you have,
@@ -2031,8 +2026,88 @@ This is what you want the structure to look like this for the `scripting` folder
 You may or may not see the names in different orders. The important thing is that the files are there. If a file is not there or you see some other name after setup, then
 castaway or sourcemod might have added or removed .sp files. The state that I showed you was true as of 2026-02-24.
 
-##
+## Compiling reverts.sp
 
+99% of the work you will do on the Castaway.tf repo will be about the reverts plugin in some form or another.
 
+Compiling the plugin is as easy as 
+running one of the following commands depending on what OS you are using
+(Open a terminal at `castaway-plugins/scripting`):
 
+**Linux:** `./spcomp reverts.sp`
+**Windows:** `./spcomp.exe reverts.sp`
+
+When you run it without arguments, the Linux version will be compiled.
+If you want to compile the Windows version, you need to add `=WIN32` like this:
+
+**Linux:** `./spcomp reverts.sp WIN32=`
+**Windows:** `./spcomp.exe reverts.sp WIN32=`
+
+### Why are they seperated? I thought SourceMod is generally programmed to be OS agnostic?
+
+Because of the memorypatches. The architecture is different between Linux and Windows
+when it comes to how memory is laid out when the TF2 Dedicated server is compiled by Valve. Thanks to tools like SourceScramble, we can cut down on alot of SourcePawn (The language of SourceMod) specific coding, however some memorypatch reverts absolutely depend
+on us making seperate compiles of the reverts.sp, and thus it is the way it is.
+
+SourcePawn does a poor job of allowing us to properly check which OS we are on in script.
+Because of this, we need the one compiling (such as yourself) to manually tell us which OS
+we are supposed to run the plugin in.
+
+IF a better solution is found someday, then we might use that. But until then this is how it has to be.
+
+### Patchless (aka no memorypatches)
+
+The plugin has a option for compiling it without memorypatches.
+Use this:
+
+`NO_MEMPATCHES=`
+
+Like this:
+
+**Linux:** `./spcomp reverts.sp NO_MEMPATCHES=`
+**Windows:** `./spcomp.exe reverts.sp NO_MEMPATCHES=`
+
+(You do not and should not try to define WIN32= if intend to compile patchless).
+
+Short QA:
+
+Q: I got an error
+A: Read the error then either search for it on the internet (do this first!) or
+ask one of us who work on the plugin. 
+
+### After compilation
+
+In the same folder as the spcomp, you will now see a `reverts.smx`
+file (it matches the name of the script you compiled).
+
+Copy this file and place it at `tf/addons/sourcemod/plugins`
+then go ahead and run your server. 
+
+Observe if you see any errors and read further on the wiki of the Castaway.tf 
+github repo for more help.
+
+## Overview of the Castaway.tf work progress.
+
+The general way you want to work with the repo is the following (this is based on my own workflow):
+
+1. Identify something you think you can improve or add. Or ask the other devs, or look at the issues page of the Castaway.tf github repo for something to work on, or just ask a Castaway.tf player.
+2. Open 3 terminals. One at `castaway-plugins`, `castaway-plugins/scripting` and the folder of your dedicated TF2 server. The first will be used for git commands, the second will be used for compiling the reverts plugin, the third will be used to launch the server.
+3. Do research on what you want to add or improve. Is a weapon unreverted? Read the TF2 wiki, watch old youtube videos of the weapon being used at the time you are interested in etc. Figured out a better way to optimize the code?
+4. In the terminal you will run git commands at, make sure you are on master, then check out a new branch based on `master` with a appropiate pre-fix and name. For example let's say you are adding a new revert for the Gunboats, then maybe `revert/gunboats-pre-jan-2010` could be appropiate. Is it a optimization? Then maybe
+`optimize/gunboat-damage-calc`. Is it a fix for a issue? Perhaps `issue-xxx/fixed-sound-spam`
+5. Get to coding.
+6. Compile, test your compile on your local TF2 server (unless it's a memorypatch or complicated math, you really don't need to ask for help with testing on the opposite OS in the PR).
+7. Keep repeating steps 5 and 6. Making sure you remember to commit so you don't do to much work in each commit. Don't forget to occasionally push to your castaway.tf repo fork either. You absolutely want to be doing this if you need to ask the rest of us for help instead of sending pastebins and shit.
+8. Once whatever you wanted to do works and you have tested it in as many ways as you can imagine (and bother to do, LOL), make a git tag (more on that later) backup.
+9. Push it a final time to your fork, then go make a PR to the Castaway.tf repo and observe if it says it can be cleanly merged or not.
+
+If it can be cleanly merged, open the PR, don't forget to fill out the template and describe what you have done before you open the PR.
+
+It it CANNOT be cleanly merged, rebase on latest master.
+10. Wait for feedback from others or any requests from random.
+(Depending on how busy random is and how complex the PR is, it can take anywhere from a day to several days before it's merged).
+
+If others find bugs, repeat steps 5 and 6 until it's fixed.
+Make sure these commits are sensible and not the typical trash commit messages.
+Also, DO NOT OPEN A NEW PR! The PR you opened earlier will autoupdate with the latest commits each time you push to your fork (origin), as the PR tracks what happens to your origin branch.
 
