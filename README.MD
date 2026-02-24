@@ -2120,10 +2120,10 @@ while on a article about for example Gunboats. When in there click the 500 to ex
 * The `before:2011-12-31` trick works for google searches too.
 * WaybackMachine is also a great resource.
 
-## Real^ example!
+## Real example!
 
 We are now going to now do a real practical example from start to finish.
-^We wont be opening a PR on the real Castaway.tf repo, instead we will do it on your fork, however you should not merge it into your fork master since again, you should never commit directly to master on your own. It's just for you to see how to open a PR.
+_We wont be opening a PR on the real Castaway.tf repo, instead we will do it on your fork, however you should not merge it into your fork master since again, you should never commit directly to master on your own. It's just for you to see how to open a PR._
 
 
 ### Selecting something to work on
