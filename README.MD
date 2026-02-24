@@ -2096,9 +2096,9 @@ The general way you want to work with the repo is the following (this is based o
 4. In the terminal you will run git commands at, make sure you are on master, then check out a new branch based on `master` with a appropiate pre-fix and name. For example let's say you are adding a new revert for the Gunboats, then maybe `revert/gunboats-pre-jan-2010` could be appropiate. Is it a optimization? Then maybe
 `optimize/gunboat-damage-calc`. Is it a fix for a issue? Perhaps `issue-xxx/fixed-sound-spam`
 5. Get to coding.
-6. Compile, test your compile on your local TF2 server (unless it's a memorypatch or complicated math, you really don't need to ask for help with testing on the opposite OS in the PR).
+6. Compile, test your compile on your local TF2 server (unless it's a memorypatch or complicated math, you really don't need to ask for help with testing on the opposite OS in the PR). Close the server down if you get errors or what you tried did not work out.
 7. Keep repeating steps 5 and 6. Making sure you remember to commit so you don't do to much work in each commit. Don't forget to occasionally push to your castaway.tf repo fork either. You absolutely want to be doing this if you need to ask the rest of us for help instead of sending pastebins and shit so you can just link to the branch you are working on, on github.
-8. Once whatever you wanted to do works and you have tested it in as many ways as you can imagine (and bother to do, LOL), make a git tag (more on that later) backup.
+8. Once whatever you wanted to do works and you have tested it in as many ways as you can imagine (and bother to do, LOL), **make a git tag** (more on that later) backup, this is important to do before a rebase incase something goes wrong (and it will when you are new).
 9. Push it a final time to your fork, then go make a PR to the Castaway.tf repo and observe if it says it can be cleanly merged or not.
 If it can be cleanly merged, open the PR, don't forget to fill out the template and describe what you have done before you open the PR. It it CANNOT be cleanly merged, rebase on latest master.
 10. Wait for feedback from others or any requests from random.
@@ -2106,6 +2106,26 @@ If it can be cleanly merged, open the PR, don't forget to fill out the template 
 
 ### Now what? The PR has been opened.
 If others find bugs, repeat steps 5 and 6 until it's fixed.
-Make sure these commits are sensible and not the typical trash commit messages.
-Also, DO NOT OPEN A NEW PR! The PR you opened earlier will autoupdate with the latest commits each time you push to your fork (origin), as the PR tracks what happens to your origin branch.
+Make sure these commits made after the PR are sensible and not the typical trash commit messages.
+Also, DO NOT OPEN A NEW PR! The PR you opened earlier will autoupdate with the latest commits each time you push your local branch to your fork (origin), as the PR tracks what happens to your origin branch on github.
 
+## Doing research.
+
+The words speak for themselves, but there's some usefull things to know about to help you with research.
+
+* You can search inbetween dates on youtube with something like `searchterm after:2016-01-01 before:2018-12-31`, for example `tf2 gunboats after:2010-01-01 before:2011-12-31`.
+* You can look at revisions to the TF2 wiki pages by clicking `VIEW HISTORY`
+while on a article about for example Gunboats. When in there click the 500 to expand the date length so much more.
+* You can download older versions of TF2 and play them to test things out. It's even possible (with great difficulty) to run sourcemod even on singleplayer. Be warned that the inventory will look fucked up, and your settings may get fucked up too. SO backupp all your TF2 settings, binds etc BEFORE you attempt this. The oldest you can get from steamdb.info is 17 April 2013. Any older than that you likely need to find cracked versions of TF2. A guide for this is here: https://steamcommunity.com/sharedfiles/filedetails/?id=3152433260
+* The `before:2011-12-31` trick works for google searches too.
+* WaybackMachine is also a great resource.
+
+## Real^ example!
+
+We are now going to now do a real practical example from start to finish.
+^We wont be opening a PR on the real Castaway.tf repo, instead we will do it on your fork, however you should not merge it into your fork master since again, you should never commit directly to master on your own. It's just for you to see how to open a PR.
+
+
+### Selecting something to work on
+
+* We will change the 
